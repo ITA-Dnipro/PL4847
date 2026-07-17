@@ -84,4 +84,21 @@ We are committed to delivering a platform that is not just a marketplace for ide
 - Regular feedback from both user groups (startups and investors) should be incorporated.
 
 
+## Running the Project
 
+First-time setup: 
+  - copy `backend/.env.example` to `backend/.env`
+  - copy `frontend/.env.example` to `frontend/.env`
+  - copy  `./.env.example` to `./.env`
+
+Build and start services
+
+```
+docker compose up --build
+```
+
+Stop containers
+
+```bash
+docker compose down
+```

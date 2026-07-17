@@ -1,0 +1,10 @@
+____pycache__
+*.pyc
+*.pyo
+.pytest_cache
+.env
+.venv
+venv/
+.git
+.gitignore
+*.md
