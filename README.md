@@ -97,6 +97,8 @@ Build and start services
 docker compose up --build
 ```
 
+The backend runs `migrate` on startup — migration errors are printed but the server still starts.
+
 Stop containers
 
 ```bash
