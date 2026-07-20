@@ -83,5 +83,9 @@ We are committed to delivering a platform that is not just a marketplace for ide
 - Each user story can be broken down into smaller tasks and developed in sprints.
 - Regular feedback from both user groups (startups and investors) should be incorporated.
 
+### How to Read CI Logs
 
-
+- Go to your GitHub repository and click on the "Actions" tab.
+- Click on the most recent workflow run.
+- Click on the failed job.
+- Scroll down to the final step named "Report all [backend/frontend] check results".
