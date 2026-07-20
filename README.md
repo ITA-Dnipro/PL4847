@@ -83,5 +83,8 @@ We are committed to delivering a platform that is not just a marketplace for ide
 - Each user story can be broken down into smaller tasks and developed in sprints.
 - Regular feedback from both user groups (startups and investors) should be incorporated.
 
-
-
+###
+ 
+- Go to the Actions -> Workflow Run -> Job (Backend/Frontend) tab.
+- Find the step marked with a red cross.
+- Expand it: the files and line numbers containing errors will be listed there.
