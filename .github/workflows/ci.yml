@@ -43,10 +43,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.12
+      - name: Set up Python 3.12-slim
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.12-slim"
           cache: pip
           cache-dependency-path: backend/requirements.txt
 
@@ -54,7 +54,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install flake8 isort black pytest pytest-django
+          pip install -r requirements-dev.txt
 
       - name: Lint with flake8
         id: flake8
@@ -102,13 +102,13 @@ jobs:
         id: tests
         continue-on-error: true
         run: |
-          if find . -type f \( -name "test_*.py" -o -name "*_test.py" \) | grep -q .; then
-            pytest 2>&1 | tee /tmp/tests.log
-            exit ${PIPESTATUS[0]}
-          else
-            echo "No test files found (test_*.py / *_test.py) — skipping pytest for now." | tee /tmp/tests.log
-            exit 0
+          if ! find . -name "test_*.py" -o -name "*_test.py" | grep -q .; then
+            echo "Error: No test files found! PR cannot be merged without tests." | tee /tmp/tests.log
+            exit 1
           fi
+          
+          pytest 2>&1 | tee /tmp/tests.log
+          exit ${PIPESTATUS[0]}
 
       - name: Report all backend check results
         if: always()
