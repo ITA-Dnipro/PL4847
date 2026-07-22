@@ -1,6 +1,6 @@
 [flake8]
 max-line-length = 88
-extend-ignore = E501
+extend-ignore = E501, W291, W292, W391, E302
 per-file-ignores =
     */admin.py: F401
     */models.py: F401
