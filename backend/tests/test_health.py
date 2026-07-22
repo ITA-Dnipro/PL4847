@@ -1,4 +1,3 @@
-import pytest
 from django.urls import NoReverseMatch, reverse
 from rest_framework.test import APIClient
 
