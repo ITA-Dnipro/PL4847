@@ -6,7 +6,10 @@ User = get_user_model()
 
 @pytest.mark.django_db
 def test_user_creation():
-    user = User.objects.create_user(username="testuser", password="password123")  # noqa: E501
+    user = User.objects.create_user(
+        username="testuser",
+        password="testpassword123",
+    )
     assert user.username == "testuser"
     assert user.is_active is True
 
