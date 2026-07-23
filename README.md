@@ -1,4 +1,9 @@
 # Forum-Project-Stage-CC
+
+![CI](https://github.com/ITA-Dnipro/PL4847/actions/workflows/ci.yml/badge.svg?branch=develop)
+![Codecov](https://img.shields.io/badge/Codecov-pending-lightgrey)
+![Dependencies](https://img.shields.io/badge/dependencies-Dependabot-enabled-blue)
+
 Forum Project Stage CC Template Repo
 
 **Project Vision Statement:**
@@ -109,3 +114,31 @@ Stop containers
 ```bash
 docker compose down
 ```
+
+## Dependency and security updates
+
+Dependency updates are managed with GitHub Dependabot.
+
+Dependabot checks the project weekly for updates to:
+
+- Python packages in `backend/requirements.txt`
+- npm packages in `frontend/package.json`
+- GitHub Actions used in workflow files
+
+Dependabot creates pull requests when dependency updates are available.
+Each update should be reviewed and validated by CI before merging.
+
+Security-related dependency updates should be reviewed with priority.
+Passwords, API tokens, secret keys, and other sensitive values must not be
+committed to the repository. Local secrets should be stored in `.env` files.
+
+## Code coverage
+
+Code coverage is uploaded to Codecov through the GitHub Actions CI workflow.
+
+The repository must contain a GitHub Actions secret named `CODECOV_TOKEN`.
+It should be configured in:
+
+`Settings` → `Secrets and variables` → `Actions`
+
+The token must not be committed to the repository.
