@@ -31,5 +31,17 @@ class User(AbstractUser):
         auto_now=True,
     )
 
+    def can_have_startup_profile(self) -> bool:
+        return self.role in {
+            self.Role.STARTUP,
+            self.Role.BOTH,
+        }
+
+    def can_have_investor_profile(self) -> bool:
+        return self.role in {
+            self.Role.INVESTOR,
+            self.Role.BOTH,
+        }
+
     def __str__(self) -> str:
         return self.email

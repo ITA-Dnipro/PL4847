@@ -1,8 +1,8 @@
 import uuid
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
-
 
 class StartupProfile(models.Model):
     class Status(models.TextChoices):
@@ -60,6 +60,23 @@ class StartupProfile(models.Model):
 
     class Meta:
         ordering = ["company_name"]
+
+    def clean(self) -> None:
+        super().clean()
+
+        if self.user_id and not self.user.can_have_startup_profile():
+            raise ValidationError(
+                {
+                    "user": (
+                        "Only users with startup or both role "
+                        "can have a startup profile."
+                    ),
+                },
+            )
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return self.company_name

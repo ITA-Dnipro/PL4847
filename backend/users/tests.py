@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
 from django.test import TestCase
 
@@ -143,14 +144,13 @@ class InitialModelsTests(TestCase):
             role=User.Role.INVESTOR,
         )
 
-        with self.assertRaises(IntegrityError):
-            with transaction.atomic():
-                InvestorProfile.objects.create(
-                    user=user,
-                    company_name="Invalid Investor",
-                    min_investment=Decimal("10000.00"),
-                    max_investment=Decimal("1000.00"),
-                )
+        with self.assertRaises(ValidationError):
+            InvestorProfile.objects.create(
+                user=user,
+                company_name="Invalid Investor",
+                min_investment=Decimal("10000.00"),
+                max_investment=Decimal("1000.00"),
+            )
 
     def test_funding_goal_cannot_be_negative(self):
         with self.assertRaises(IntegrityError):
@@ -161,3 +161,18 @@ class InitialModelsTests(TestCase):
                     slug="invalid-project",
                     funding_goal=Decimal("-1.00"),
                 )
+
+    def test_investor_cannot_have_startup_profile(self):
+        with self.assertRaises(ValidationError):
+            StartupProfile.objects.create(
+                user=self.investor_user,
+                company_name="Invalid Startup",
+                slug="invalid-startup",
+            )
+
+    def test_startup_cannot_have_investor_profile(self):
+        with self.assertRaises(ValidationError):
+            InvestorProfile.objects.create(
+                user=self.startup_user,
+                company_name="Invalid Investor",
+            )

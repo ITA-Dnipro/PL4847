@@ -2,6 +2,7 @@ import uuid
 from decimal import Decimal
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import F, Q
@@ -82,6 +83,23 @@ class InvestorProfile(models.Model):
                 name="investor_max_investment_gte_min",
             ),
         ]
+
+    def clean(self) -> None:
+        super().clean()
+
+        if self.user_id and not self.user.can_have_investor_profile():
+            raise ValidationError(
+                {
+                    "user": (
+                        "Only users with investor or both role "
+                        "can have an investor profile."
+                    ),
+                },
+            )
+
+    def save(self, *args, **kwargs) -> None:
+        self.full_clean()
+        super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return self.company_name
