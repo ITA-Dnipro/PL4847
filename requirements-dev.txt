@@ -1,7 +1,0 @@
-cat <<EOF > backend/requirements-dev.txt
-black
-isort
-flake8
-pylint
-pre-commit
-EOF
