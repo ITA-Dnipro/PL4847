@@ -1,0 +1,8 @@
+black
+isort
+flake8
+pylint
+pre-commit
+django-environ
+pytest
+pytest-django

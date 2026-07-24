@@ -1,0 +1,8 @@
+python3 -c "
+try:
+    with open('backend/requirements.txt', 'rb') as f: c = f.read()
+    if c.startswith(b'\xff\xfe') or c.startswith(b'\xfe\xff'):
+        with open('backend/requirements.txt', 'w', encoding='utf-8') as f: f.write(c.decode('utf-16'))
+        print('Кодування requirements.txt виправлено на UTF-8!')
+except Exception as e: print('Помилка:', e)
+"
