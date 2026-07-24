@@ -1,5 +1,6 @@
-import { Routes, Route, Link} from "react-router-dom"
+import { Routes, Route} from "react-router-dom"
 import "./App.css"
+import Header from "./components/Header/Header"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
@@ -11,31 +12,17 @@ import Inbox from "./pages/Inbox"
 function App() {
   return (
     <>
-    <nav>
-      <Link to="/">Home</Link>
-      {" | "}
-      <Link to="/login">Login</Link>
-      {" | "}
-      <Link to="/register">Register</Link>
-      {" | "}
-      <Link to="/startups/1">Startup Info</Link>
-      {" | "}
-      <Link to="/dashboard">Dashboard</Link>
-      {" | "}
-      <Link to="/messages">Messages</Link>
-      {" | "}
+      <Header />
       
-    </nav>
-      
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/startups/:id" element={<StartupView />} />
-      <Route path="/dashboard" element={<InvestorDashboard />} />
-      <Route path="/messages" element={<Inbox />} />
-    </Routes>
-      </>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/startups/:id" element={<StartupView />} />
+        <Route path="/dashboard" element={<InvestorDashboard />} />
+        <Route path="/messages" element={<Inbox />} />
+      </Routes>
+    </>
   )
 }
 
