@@ -91,5 +91,27 @@
       "created_at": "2026-07-17T08:15:00Z",
       "updated_at": "2026-07-17T08:15:00Z"
     }
+  },
+  {
+    "model": "custom_messages.message",
+    "pk": 1,
+    "fields": {
+      "sender": "22222222-2222-4222-8222-222222222222",
+      "recipient": "11111111-1111-4111-8111-111111111111",
+      "project": "55555555-5555-4555-8555-555555555555",
+      "body": "Hello, I am interested in your project.",
+      "created_at": "2026-07-24T10:00:00Z",
+      "read_at": null
+    }
+  },
+  {
+    "model": "custom_messages.notification",
+    "pk": 1,
+    "fields": {
+      "user": "11111111-1111-4111-8111-111111111111",
+      "message": "An investor contacted you.",
+      "is_read": false,
+      "created_at": "2026-07-24T10:01:00Z"
+    }
   }
 ]
