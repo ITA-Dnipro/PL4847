@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import StartupCard from "./StartupCard";
 import mockStartups from "../mocks/Startups";
+import "./StartupsGrid.css";
 
 const API_BASE = import.meta.env.VITE_API_URL;
 const INITIAL_URL = `${API_BASE}/api/startups/?page=1&page_size=8`;
@@ -10,24 +11,6 @@ function StartupsGrid() {
     const [nextUrl, setNextUrl] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
-
-    // useEffect(() => {
-    //     fetch(INITIAL_URL)
-    //     .then((response) => {
-    //         if (!response.ok) throw new Error("Bad response");
-    //         return response.json();
-    //     })
-    //     .then((data) => {
-    //         setStartups(data.results);
-    //         setNextUrl(data.next);
-    //     })
-    //     .catch(() => {
-    //         setStartups(mockStartups);
-    //         setNextUrl(null);
-    //         setError(true);
-    //     })
-    //     .finally(() => setLoading(false));
-    // }, []);
 
     useEffect(() => {
         async function loadStartups() {
@@ -64,8 +47,8 @@ function StartupsGrid() {
 
     
 
-    if (loading) return <p>Loading...</p>;               // loading state
-    if (!startups.length) return <p>No startups yet.</p>; // empty state
+    if (loading) return <p>Loading...</p>;              
+    if (!startups.length) return <p>No startups yet.</p>;
 
     return (
         <div>
@@ -79,7 +62,11 @@ function StartupsGrid() {
                     <StartupCard key={s.id} startup={s} />
                 ))}
             </div>
-            {nextUrl && <button onClick={handleViewMore}>View more</button>}
+            {nextUrl && (
+                <button className="startups-grid__view-more" onClick={handleViewMore}>
+                    View more
+                </button>
+            )}
         </div>
     );
 }

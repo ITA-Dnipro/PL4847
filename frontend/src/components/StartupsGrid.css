@@ -1,0 +1,28 @@
+.startups-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-top: 24px;
+}
+
+.startups-grid__error {
+    color: #b45309;
+    margin-bottom: 16px;
+}
+
+.startups-grid__view-more {
+    display: block;
+    margin: 32px auto 0;
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-h);
+    font: inherit;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.startups-grid__view-more:hover {
+    border-color: var(--accent-border);
+}

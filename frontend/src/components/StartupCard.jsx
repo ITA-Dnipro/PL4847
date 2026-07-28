@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import "./StartupCard.css";
 
 function StartupCard({ startup }) {
     if (!startup) return null;
