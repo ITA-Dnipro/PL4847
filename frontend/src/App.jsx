@@ -24,9 +24,9 @@ function App() {
       {" | "}
       <Link to="/messages">Messages</Link>
       {" | "}
-      
+
     </nav>
-      
+
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
