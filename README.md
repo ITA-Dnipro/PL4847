@@ -1,7 +1,7 @@
 # Forum-Project-Stage-CC
 
 ![CI](https://github.com/ITA-Dnipro/PL4847/actions/workflows/ci.yml/badge.svg?branch=develop)
-![Codecov](https://img.shields.io/badge/Codecov-pending-lightgrey)
+[![Codecov](https://codecov.io/gh/ITA-Dnipro/PL4847/branch/develop/graph/badge.svg)](https://codecov.io/gh/ITA-Dnipro PL4847)
 ![Dependencies](https://img.shields.io/badge/dependencies-Dependabot-enabled-blue)
 
 Forum Project Stage CC Template Repo
@@ -142,3 +142,9 @@ It should be configured in:
 `Settings` → `Secrets and variables` → `Actions`
 
 The token must not be committed to the repository.
+
+The Codecov upload step uses `fail_ci_if_error: false`.
+
+If `CODECOV_TOKEN` is missing or incorrect, or if the Codecov upload fails,
+the error will be reported in the workflow logs, but it will not fail the
+entire CI pipeline.
