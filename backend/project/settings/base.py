@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "messages",
     "investors",
     "dashboard",
+    "content",
 ]
 
 MIDDLEWARE = [
