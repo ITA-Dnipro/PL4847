@@ -82,8 +82,6 @@ We are committed to delivering a platform that is not just a marketplace for ide
 
 - Each user story can be broken down into smaller tasks and developed in sprints.
 - Regular feedback from both user groups (startups and investors) should be incorporated.
-<<<<<<< HEAD
-=======
 
 ###
 
@@ -111,4 +109,3 @@ Stop containers
 ```bash
 docker compose down
 ```
->>>>>>> 373c504052045f046a274a3f613b298e07fd4cd3
