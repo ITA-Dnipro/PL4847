@@ -1,9 +1,7 @@
-import pytest
 from rest_framework import status
 from rest_framework.test import APIClient
 
 
-@pytest.mark.django_db
 def test_get_landing_content_structure():
     """Test GET /api/content/landing/ returns 200 OK and valid JSON schema."""
     client = APIClient()
