@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -6,60 +5,50 @@ from rest_framework.views import APIView
 
 
 class LandingContentView(APIView):
-    """
-    GET /api/content/landing/
-    Повертає статичний контент для лендингу (Hero, For Whom, Why Worth, Footer).
-    """
+    """API view to serve static landing page content in structured JSON format."""
 
-    permission_classes = [AllowAny]
+    permission_classes = (AllowAny,)
 
     def get(self, request):
-        landing_data = {
+        """Handle GET requests and return structured landing content."""
+        data = {
             "hero": {
-                "title": "Платформа для стартапів та інвесторів",
-                "subtitle": "Знаходьте інвестиції та запускайте перспективні проєкти разом з нами.",
+                "title": "Welcome to Startup Platform",
+                "subtitle": "Connecting investors and innovative startups.",
                 "cta_text": "Join",
-                "hero_images": [
-                    "https://example.com/images/hero1.jpg",
-                    "https://example.com/images/hero2.jpg",
-                ],
+                "hero_images": [],
             },
             "for_whom": [
                 {
                     "icon": "designer",
-                    "title": "Дизайнерам",
-                    "desc": "Створюйте круті UI/UX рішення для нових стартапів.",
-                },
-                {
-                    "icon": "developer",
-                    "title": "Розробникам",
-                    "desc": "Приєднуйтесь до команд та реалізуйте масштабні ідеї.",
+                    "title": "Startups",
+                    "desc": "Find funding and supporters.",
                 },
                 {
                     "icon": "investor",
-                    "title": "Інвесторам",
-                    "desc": "Знаходьте перспективні стартапи для вкладення коштів.",
+                    "title": "Investors",
+                    "desc": "Discover promising ideas.",
                 },
             ],
             "why_worth": [
                 {
-                    "title": "Прозорість",
-                    "desc": "Усі умови співпраці прозорі та відкриті.",
+                    "title": "Transparency",
+                    "desc": "Verified data and clear analytics.",
                 },
                 {
-                    "title": "Спільнота",
-                    "desc": "Доступ до мережі сильних фахівців та менторів.",
+                    "title": "Efficiency",
+                    "desc": "Streamlined investment process.",
                 },
             ],
             "footer_links": {
                 "left": [
-                    {"name": "Про нас", "url": "/about"},
-                    {"name": "Контакти", "url": "/contacts"},
+                    {"name": "About Us", "url": "/about"},
+                    {"name": "Privacy Policy", "url": "/privacy"},
                 ],
                 "right": [
-                    {"name": "Privacy Policy", "url": "/privacy"},
-                    {"name": "Terms of Service", "url": "/terms"},
+                    {"name": "Contact", "url": "/contact"},
+                    {"name": "FAQ", "url": "/faq"},
                 ],
             },
         }
-        return Response(landing_data, status=status.HTTP_200_OK)
+        return Response(data, status=status.HTTP_200_OK)
