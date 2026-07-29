@@ -2,6 +2,7 @@
 Базові налаштування Django, спільні для dev/prod.
 """
 
+from datetime import timedelta
 from pathlib import Path
 
 import environ
@@ -28,6 +29,7 @@ INSTALLED_APPS = [
     "messages",
     "investors",
     "dashboard",
+    "rest_framework_simplejwt.token_blacklist",
 ]
 
 MIDDLEWARE = [
@@ -93,3 +95,11 @@ USE_TZ = True
 STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": True,  # <--- Важливо для анулювання
+}
