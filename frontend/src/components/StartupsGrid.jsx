@@ -57,6 +57,7 @@ function StartupsGrid() {
                     Couldn't load live data — showing sample startups.
                 </p>
             )}
+            <h2>New Participants</h2>
             <div className="startups-grid">
                 {startups.map((s) => (
                     <StartupCard key={s.id} startup={s} />
