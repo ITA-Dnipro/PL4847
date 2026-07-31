@@ -7,6 +7,7 @@ import "./Header.css"
 function Header() {
   const [searchQuery, setSearchQuery] = useState("")
   const navigate = useNavigate()
+  const isAuthenticated = false
 
   const handleSearch = (event) => {
     event.preventDefault()
@@ -47,13 +48,21 @@ function Header() {
         </nav>
 
         <div className="header__auth">
-          <Link className="header__login" to="/login">
-            Login
-          </Link>
+          {isAuthenticated ? (
+            <Link className="header__login" to="/dashboard">
+              Account
+            </Link>
+          ) : (
+            <>
+              <Link className="header__login" to="/login">
+                Login
+              </Link>
 
-          <Link className="header__register" to="/register">
-            Register
-          </Link>
+              <Link className="header__register" to="/register">
+                Register
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>
