@@ -35,37 +35,37 @@ We are committed to delivering a platform that is not just a marketplace for ide
      - implement the functionality for users to select and switch roles.
 
 2. **As a startup company,** I want to create a profile on the platform, so that I can present my ideas and proposals to potential investors.
-   
+
    - Features:
      -  user registration functionality for startups.
      -  profile setup page where startups can add details about their company and ideas.
 
 3. **As an investor,** I want to view profiles of startups, so that I can find promising ideas to invest in.
-   
+
    - Features:
      -  feature for investors to browse and filter startup profiles.
      -  viewing functionality for detailed startup profiles.
 
 4. **As a startup company,** I want to update my project information, so that I can keep potential investors informed about our progress and milestones.
-   
+
    - Features:
      -  functionality for startups to edit and update their project information.
      -  system to notify investors about updates to startups they are following.
 
 5. **As an investor,** I want to be able to contact startups directly through the platform, so that I can discuss investment opportunities.
-   
+
    - Features:
      -  secure messaging system within the platform for communication between startups and investors.
      -  privacy and security measures to protect the communication.
 
 6. **As a startup company,** I want to receive notifications about interested investors, so that I can engage with them promptly.
-   
+
    - Features:
      -  notification functionality for startups when an investor shows interest or contacts them.
      -  dashboard for startups to view and manage investor interactions.
 
 7. **As an investor,** I want to save and track startups that interest me, so that I can manage my investment opportunities effectively.
-   
+
    - Features:
      -  feature for investors to save and track startups.
      -  dashboard for investors to manage their saved startups and investment activities.
@@ -73,7 +73,7 @@ We are committed to delivering a platform that is not just a marketplace for ide
 ### Additional Features
 
 - **Security and Data Protection**: Ensure that user data, especially sensitive financial information, is securely handled.
-  
+
 - **User Feedback System**: Create a system for users to provide feedback on the platform, contributing to continuous improvement.
 
 - **Analytical Tools**: Implement analytical tools for startups to understand investor engagement and for investors to analyze startup potential.
@@ -83,5 +83,29 @@ We are committed to delivering a platform that is not just a marketplace for ide
 - Each user story can be broken down into smaller tasks and developed in sprints.
 - Regular feedback from both user groups (startups and investors) should be incorporated.
 
+###
 
+- Go to the Actions -> Workflow Run -> Job (Backend/Frontend) tab.
+- Find the step marked with a red cross.
+- Expand it: the files and line numbers containing errors will be listed there.
 
+## Running the Project
+
+First-time setup:
+  - copy `backend/.env.example` to `backend/.env`
+  - copy `frontend/.env.example` to `frontend/.env`
+  - copy  `./.env.example` to `./.env`
+
+Build and start services
+
+```
+docker compose up --build
+```
+
+The backend runs `migrate` on startup — migration errors are printed but the server still starts.
+
+Stop containers
+
+```bash
+docker compose down
+```
