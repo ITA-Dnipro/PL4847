@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import './ForWhomGrid.css';
-import { ICONS } from './icons';
+import { ICONS } from './iconMap';
 
 const SKELETON_COUNT = 8;
 const SECTION_TITLE = 'Для кого';

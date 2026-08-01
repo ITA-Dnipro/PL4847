@@ -1,6 +1,3 @@
-import React from 'react';
-
-
 const base = {
   width: 36,
   height: 36,
@@ -28,6 +25,7 @@ export const WineGlassIcon = (props) => (
     />
   </svg>
 );
+
 export const HotelIcon = (props) => (
   <svg {...base} {...props}>
     <path
@@ -88,16 +86,3 @@ export const PeopleIcon = (props) => (
     />
   </svg>
 );
-
-export const ICONS = {
-  pen: PenIcon,
-  wine: WineGlassIcon,
-  hotel: HotelIcon,
-  cart: CartIcon,
-  box: BoxIcon,
-  truck: TruckIcon,
-  rocket: RocketIcon,
-  people: PeopleIcon,
-};
-
-export default ICONS; 
