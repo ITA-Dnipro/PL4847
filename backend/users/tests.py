@@ -4,11 +4,9 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
 from django.test import TestCase
-
 from investors.models import InvestorProfile, SavedStartup
 from projects.models import Project
 from startups.models import StartupProfile
-
 
 User = get_user_model()
 
@@ -41,10 +39,7 @@ class InitialModelsTests(TestCase):
         )
 
     def test_user_fields_exist(self):
-        field_names = {
-            field.name
-            for field in User._meta.fields
-        }
+        field_names = {field.name for field in User._meta.fields}
 
         expected_fields = {
             "id",

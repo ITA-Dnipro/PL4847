@@ -61,17 +61,11 @@ class InvestorProfile(models.Model):
         ordering = ["company_name"]
         constraints = [
             models.CheckConstraint(
-                condition=(
-                    Q(min_investment__isnull=True)
-                    | Q(min_investment__gte=0)
-                ),
+                condition=(Q(min_investment__isnull=True) | Q(min_investment__gte=0)),
                 name="investor_min_investment_nonnegative",
             ),
             models.CheckConstraint(
-                condition=(
-                    Q(max_investment__isnull=True)
-                    | Q(max_investment__gte=0)
-                ),
+                condition=(Q(max_investment__isnull=True) | Q(max_investment__gte=0)),
                 name="investor_max_investment_nonnegative",
             ),
             models.CheckConstraint(

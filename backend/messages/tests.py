@@ -1,11 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
-
 from projects.models import Project
 from startups.models import StartupProfile
 
 from .models import Message, Notification
-
 
 User = get_user_model()
 

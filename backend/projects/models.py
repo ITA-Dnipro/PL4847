@@ -89,10 +89,7 @@ class Project(models.Model):
                 name="unique_startup_project_slug",
             ),
             models.CheckConstraint(
-                condition=(
-                    Q(funding_goal__isnull=True)
-                    | Q(funding_goal__gte=0)
-                ),
+                condition=(Q(funding_goal__isnull=True) | Q(funding_goal__gte=0)),
                 name="project_funding_goal_nonnegative",
             ),
         ]

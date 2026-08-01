@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-
 from investors.models import InvestorProfile, SavedStartup
 from projects.models import Project
 from startups.models import StartupProfile
