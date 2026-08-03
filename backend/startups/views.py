@@ -23,7 +23,7 @@ class StartupListView(ListAPIView):
             StartupProfile.objects.filter(status=StartupProfile.Status.PUBLISHED)
             .select_related("location")
             .prefetch_related("tags")
-            .order_by("company_name")
+            .order_by("company_name", "id")
         )
 
         tag = self.request.query_params.get("tag")
