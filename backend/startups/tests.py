@@ -28,9 +28,7 @@ class StartupListAPITests(APITestCase):
         cls.craft_tag = Tag.objects.create(name="Craft", slug="craft")
         cls.saas_tag = Tag.objects.create(name="SaaS", slug="saas")
 
-        cls.chernivtsi = Location.objects.create(
-            name="Chernivtsi", slug="chernivtsi"
-        )
+        cls.chernivtsi = Location.objects.create(name="Chernivtsi", slug="chernivtsi")
         cls.lviv = Location.objects.create(name="Lviv", slug="lviv")
         cls.kyiv = Location.objects.create(name="Kyiv", slug="kyiv")
 
@@ -115,20 +113,14 @@ class StartupListAPITests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["count"], 1)
-        self.assertEqual(
-            response.data["results"][0]["company_name"], "Handmade Co"
-        )
+        self.assertEqual(response.data["results"][0]["company_name"], "Handmade Co")
 
     def test_search_by_company_name(self):
-        response = self.client.get(
-            self.url, {"search": "cloud", "page_size": 100}
-        )
+        response = self.client.get(self.url, {"search": "cloud", "page_size": 100})
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["count"], 1)
-        self.assertEqual(
-            response.data["results"][0]["company_name"], "CloudLedger"
-        )
+        self.assertEqual(response.data["results"][0]["company_name"], "CloudLedger")
 
     def test_response_shape_matches_spec(self):
         response = self.client.get(self.url, {"tag": "craft"})

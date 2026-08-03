@@ -4,25 +4,28 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 
+
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True)
- 
+
     class Meta:
         ordering = ["name"]
- 
+
     def __str__(self) -> str:
         return self.name
+
 
 class Location(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True)
- 
+
     class Meta:
         ordering = ["name"]
- 
+
     def __str__(self) -> str:
         return self.name
+
 
 class StartupProfile(models.Model):
     class Status(models.TextChoices):
@@ -89,7 +92,6 @@ class StartupProfile(models.Model):
         related_name="startup_profiles",
     )
     tags = models.ManyToManyField(Tag, related_name="startups", blank=True)
-
 
     class Meta:
         ordering = ["company_name"]

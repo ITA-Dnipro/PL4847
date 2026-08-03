@@ -1,13 +1,16 @@
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
+
 from .models import StartupProfile
 from .serializers import StartupListSerializer
+
 
 class StartupPagination(PageNumberPagination):
     page_size = 8
     page_size_query_param = "page_size"
     max_page_size = 50
+
 
 class StartupListView(ListAPIView):
 
