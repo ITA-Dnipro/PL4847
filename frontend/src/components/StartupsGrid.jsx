@@ -5,13 +5,36 @@ import mockStartups from "../mocks/Startups";
 import "./StartupsGrid.css";
 
 const API_BASE = import.meta.env.VITE_API_URL;
-const INITIAL_URL = `${API_BASE}/api/startups/?page=1&page_size=8`;
+const API_PREFIX = API_BASE ?? "";
+const INITIAL_URL = `${API_PREFIX}/api/startups/?page=1&page_size=8`;
+
+function normalizeNextUrl(nextUrl) {
+    if (!nextUrl) return null;
+
+    if (nextUrl.startsWith("/api/")) {
+        return nextUrl;
+    }
+
+    try {
+        const parsedUrl = new URL(nextUrl, window.location.origin);
+
+        if (parsedUrl.pathname.startsWith("/api/")) {
+            return `${parsedUrl.pathname}${parsedUrl.search}${parsedUrl.hash}`;
+        }
+    } catch {
+        return nextUrl;
+    }
+
+    return nextUrl;
+}
 
 function StartupsGrid() {
     const [startups, setStartups] = useState([]);
     const [nextUrl, setNextUrl] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
+    const [loadingMore, setLoadingMore] = useState(false);
+    const [initialLoadError, setInitialLoadError] = useState(false);
+    const [paginationError, setPaginationError] = useState(false);
 
     useEffect(() => {
         async function loadStartups() {
@@ -20,11 +43,12 @@ function StartupsGrid() {
                 if (!response.ok) throw new Error("Bad response");
                 const data = await response.json();
                 setStartups(data.results);
-                setNextUrl(data.next);
+                setNextUrl(normalizeNextUrl(data.next));
+                setInitialLoadError(false);
             } catch {
                 setStartups(mockStartups);
                 setNextUrl(null);
-                setError(true);
+                setInitialLoadError(true);
             } finally {
                 setLoading(false);
             }
@@ -33,16 +57,20 @@ function StartupsGrid() {
     }, []);
 
     async function handleViewMore() {
-        if (!nextUrl) return;
+        if (!nextUrl || loadingMore) return;
 
         try {
+            setLoadingMore(true);
+            setPaginationError(false);
             const response = await fetch(nextUrl);
             if (!response.ok) throw new Error("Bad response");
             const data = await response.json();
             setStartups((prev) => [...prev, ...data.results]);
-            setNextUrl(data.next);
+            setNextUrl(normalizeNextUrl(data.next));
         } catch {
-            setError(true);
+            setPaginationError(true);
+        } finally {
+            setLoadingMore(false);
         }
     }
 
@@ -59,7 +87,7 @@ function StartupsGrid() {
                 </Link>
             </div>
 
-            {error && (
+            {initialLoadError && (
                 <p className="startups-grid__error">
                     Couldn't load live data — showing sample startups.
                 </p>
@@ -76,9 +104,18 @@ function StartupsGrid() {
                             <StartupCard key={s.id} startup={s} />
                         ))}
                     </div>
+                    {paginationError && (
+                        <p className="startups-grid__pagination-error">
+                            Couldn't load more startups right now.
+                        </p>
+                    )}
                     {nextUrl && (
-                        <button className="startups-grid__view-more" onClick={handleViewMore}>
-                            View more
+                        <button
+                            className="startups-grid__view-more"
+                            onClick={handleViewMore}
+                            disabled={loadingMore}
+                        >
+                            {loadingMore ? "Loading..." : "View more"}
                         </button>
                     )}
                 </>

@@ -75,6 +75,12 @@
     margin-bottom: 16px;
 }
 
+.startups-grid__pagination-error {
+    color: #b45309;
+    margin: 20px 0 0;
+    text-align: center;
+}
+
 .startups-grid__view-more {
     display: block;
     margin: 32px auto 0;
