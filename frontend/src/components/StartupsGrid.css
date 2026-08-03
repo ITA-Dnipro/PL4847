@@ -1,3 +1,8 @@
+.startups-section {
+    padding-inline: 12px;
+    padding: var(--margin-top-bottom) var(--margin-left-right);
+}
+
 .startups-section__header {
     display: flex;
     align-items: center;
