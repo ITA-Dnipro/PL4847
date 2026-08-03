@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import StartupCard from "./StartupCard";
 import mockStartups from "../mocks/Startups";
 import "./StartupsGrid.css";
@@ -45,30 +46,44 @@ function StartupsGrid() {
         }
     }
 
-    
-
-    if (loading) return <p>Loading...</p>;              
-    if (!startups.length) return <p>No startups yet.</p>;
-
     return (
-        <div>
+        <section className="startups-section" aria-label="Нові учасники">
+            <div className="startups-section__header">
+                <h2 className="startups-section__title">Нові учасники</h2>
+                <Link to="/startups" className="startups-section__link">
+                    <span className="startups-section__link-frame">
+                        <span className="startups-section__link-label">Всі підприємства</span>
+                        <span className="startups-section__link-underline" />
+                    </span>
+                    <span className="startups-section__link-icon" aria-hidden="true">→</span>
+                </Link>
+            </div>
+
             {error && (
                 <p className="startups-grid__error">
                     Couldn't load live data — showing sample startups.
                 </p>
             )}
-            <h2>New Participants</h2>
-            <div className="startups-grid">
-                {startups.map((s) => (
-                    <StartupCard key={s.id} startup={s} />
-                ))}
-            </div>
-            {nextUrl && (
-                <button className="startups-grid__view-more" onClick={handleViewMore}>
-                    View more
-                </button>
+
+            {loading ? (
+                <p>Loading...</p>
+            ) : !startups.length ? (
+                <p>No startups yet.</p>
+            ) : (
+                <>
+                    <div className="startups-grid">
+                        {startups.map((s) => (
+                            <StartupCard key={s.id} startup={s} />
+                        ))}
+                    </div>
+                    {nextUrl && (
+                        <button className="startups-grid__view-more" onClick={handleViewMore}>
+                            View more
+                        </button>
+                    )}
+                </>
             )}
-        </div>
+        </section>
     );
 }
 
