@@ -32,6 +32,8 @@ class PasswordResetRequestView(APIView):
         if serializer.is_valid():
             email = serializer.validated_data["email"]
 
+            # Використовуємо filter().first() замість get(),
+            # щоб уникнути User.MultipleObjectsReturned
             user = User.objects.filter(email__iexact=email, is_active=True).first()
 
             if user:
@@ -71,20 +73,24 @@ class PasswordResetRequestView(APIView):
                     try:
                         msg.send()
                         logger.info(
-                            f"AUDIT: Password reset email sent for user ID: {user.pk}"
+                            "AUDIT: Password reset email sent for user ID: %s",
+                            user.pk,
                         )
                     except Exception:
-
                         logger.exception(
-                            f"AUDIT: Failed to send password reset email for user ID: {user.pk}"
+                            "AUDIT: Failed to send password reset email for user ID: %s",
+                            user.pk,
                         )
                 except Exception:
+
                     logger.exception(
-                        f"AUDIT: Unexpected error processing password reset for email: {email}"
+                        "AUDIT: Unexpected error processing password reset for user ID: %s",
+                        user.pk,
                     )
             else:
+
                 logger.info(
-                    f"AUDIT: Password reset requested for non-existent email: {email}"
+                    "AUDIT: Password reset requested for a non-existent or inactive account."
                 )
 
             return Response(
@@ -111,7 +117,8 @@ class PasswordResetConfirmView(APIView):
             user.save()
 
             logger.info(
-                f"AUDIT: Password reset successfully completed for user ID: {user.pk}"
+                "AUDIT: Password reset successfully completed for user ID: %s",
+                user.pk,
             )
             return Response(
                 {"message": "Password has been reset successfully."},
