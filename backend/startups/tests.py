@@ -138,9 +138,12 @@ class StartupListAPITests(APITestCase):
         self.assertEqual(result["location"], "Chernivtsi")
         self.assertIn("craft", result["tags"])
 
-def test_pagination_with_duplicate_company_names(self):
+    def test_pagination_with_duplicate_company_names(self):
+        user_alpha_1 = make_user("alpha_owner1", "alpha_owner1@example.com")
+        user_alpha_2 = make_user("alpha_owner2", "alpha_owner2@example.com")
+
         StartupProfile.objects.create(
-            user=self.user1,
+            user=user_alpha_1,
             company_name="Alpha Startup",
             slug="alpha-1",
             short_description="First alpha",
@@ -149,7 +152,7 @@ def test_pagination_with_duplicate_company_names(self):
             status=StartupProfile.Status.PUBLISHED,
         )
         StartupProfile.objects.create(
-            user=self.user2,
+            user=user_alpha_2,
             company_name="Alpha Startup",
             slug="alpha-2",
             short_description="Second alpha",
