@@ -56,7 +56,7 @@ class PasswordResetRequestView(APIView):
 
                 context = {
                     "user": user,
-                    "reset_link": reset_link,
+                    "reset_url": reset_link,
                 }
                 subject = "Скидання пароля"
                 from_email = getattr(
@@ -65,10 +65,10 @@ class PasswordResetRequestView(APIView):
 
                 try:
                     text_content = render_to_string(
-                        "emails/password_reset.txt", context
+                        "emails/password_reset_email.txt", context
                     )
                     html_content = render_to_string(
-                        "emails/password_reset.html", context
+                        "emails/password_reset_email.html", context
                     )
 
                     msg = EmailMultiAlternatives(
@@ -80,7 +80,6 @@ class PasswordResetRequestView(APIView):
                     msg.attach_alternative(html_content, "text/html")
                     msg.send()
                 except TemplateDoesNotExist:
-                    # Резервний варіант надсилання, якщо файли HTML/TXT шаблонів відсутні
                     send_mail(
                         subject=subject,
                         message=f"Password reset link: {reset_link}",

@@ -26,13 +26,11 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         raw_token = data.get("token")
         password = data.get("password")
 
-        # 1. Перевірка наявності роздільника ':' між uidb64 та token
         if not raw_token or ":" not in raw_token:
             raise serializers.ValidationError({"token": "Invalid or expired token."})
 
         uidb64, token = raw_token.split(":", 1)
 
-        # 2. Декодування base64 та пошук користувача
         try:
             uid = force_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
@@ -41,11 +39,9 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
                 {"token": "Invalid or expired token."}
             ) from None
 
-        # 3. Перевірка валідності токена
         if not default_token_generator.check_token(user, token):
             raise serializers.ValidationError({"token": "Invalid or expired token."})
 
-        # 4. Перевірка складності пароля
         try:
             validate_password(password, user=user)
         except DjangoValidationError as e:
@@ -58,10 +54,8 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         user = self.validated_data["user"]
         password = self.validated_data["password"]
 
-        # Збереження нового пароля
         user.set_password(password)
         user.save()
 
-        # Аудит-лог (без PII - тільки user.pk)
         logger.info("AUDIT: Password successfully reset for user ID: %s", user.pk)
         return user
