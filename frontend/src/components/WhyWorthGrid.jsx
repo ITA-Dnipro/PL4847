@@ -24,7 +24,7 @@ function normalizeWhyWorth(json) {
 			desc: card.desc,
 		}));
 
-	if (cards.length < 4 || card.length > 6) return null;
+	if (cards.length < 4 || cards.length > 6) return null;
 
 	return { title: SECTION_TITLE, cards };
 }
