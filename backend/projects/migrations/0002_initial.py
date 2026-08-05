@@ -9,26 +9,41 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('projects', '0001_initial'),
-        ('startups', '0001_initial'),
+        ("projects", "0001_initial"),
+        ("startups", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='project',
-            name='startup',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='projects', to='startups.startupprofile'),
+            model_name="project",
+            name="startup",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="projects",
+                to="startups.startupprofile",
+            ),
         ),
         migrations.AddIndex(
-            model_name='project',
-            index=models.Index(fields=['startup', 'status'], name='project_startup_status_idx'),
+            model_name="project",
+            index=models.Index(
+                fields=["startup", "status"], name="project_startup_status_idx"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='project',
-            constraint=models.UniqueConstraint(fields=('startup', 'slug'), name='unique_startup_project_slug'),
+            model_name="project",
+            constraint=models.UniqueConstraint(
+                fields=("startup", "slug"), name="unique_startup_project_slug"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='project',
-            constraint=models.CheckConstraint(condition=models.Q(('funding_goal__isnull', True), ('funding_goal__gte', 0), _connector='OR'), name='project_funding_goal_nonnegative'),
+            model_name="project",
+            constraint=models.CheckConstraint(
+                condition=models.Q(
+                    ("funding_goal__isnull", True),
+                    ("funding_goal__gte", 0),
+                    _connector="OR",
+                ),
+                name="project_funding_goal_nonnegative",
+            ),
         ),
     ]

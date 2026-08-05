@@ -10,36 +10,73 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='InvestorProfile',
+            name="InvestorProfile",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('company_name', models.CharField(max_length=255)),
-                ('description', models.TextField(blank=True)),
-                ('website', models.URLField(blank=True, max_length=500)),
-                ('contact_email', models.EmailField(blank=True, max_length=254)),
-                ('investment_focus', models.CharField(blank=True, max_length=255)),
-                ('min_investment', models.DecimalField(blank=True, decimal_places=2, max_digits=14, null=True, validators=[django.core.validators.MinValueValidator(Decimal('0.00'))])),
-                ('max_investment', models.DecimalField(blank=True, decimal_places=2, max_digits=14, null=True, validators=[django.core.validators.MinValueValidator(Decimal('0.00'))])),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("company_name", models.CharField(max_length=255)),
+                ("description", models.TextField(blank=True)),
+                ("website", models.URLField(blank=True, max_length=500)),
+                ("contact_email", models.EmailField(blank=True, max_length=254)),
+                ("investment_focus", models.CharField(blank=True, max_length=255)),
+                (
+                    "min_investment",
+                    models.DecimalField(
+                        blank=True,
+                        decimal_places=2,
+                        max_digits=14,
+                        null=True,
+                        validators=[
+                            django.core.validators.MinValueValidator(Decimal("0.00"))
+                        ],
+                    ),
+                ),
+                (
+                    "max_investment",
+                    models.DecimalField(
+                        blank=True,
+                        decimal_places=2,
+                        max_digits=14,
+                        null=True,
+                        validators=[
+                            django.core.validators.MinValueValidator(Decimal("0.00"))
+                        ],
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
             ],
             options={
-                'ordering': ['company_name'],
+                "ordering": ["company_name"],
             },
         ),
         migrations.CreateModel(
-            name='SavedStartup',
+            name="SavedStartup",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('added_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("added_at", models.DateTimeField(auto_now_add=True)),
             ],
             options={
-                'ordering': ['-added_at'],
+                "ordering": ["-added_at"],
             },
         ),
     ]
