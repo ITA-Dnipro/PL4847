@@ -8,27 +8,46 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='StartupProfile',
+            name="StartupProfile",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('company_name', models.CharField(max_length=255)),
-                ('slug', models.SlugField(max_length=255, unique=True)),
-                ('short_description', models.CharField(blank=True, max_length=500)),
-                ('description', models.TextField(blank=True)),
-                ('website', models.URLField(blank=True, max_length=500)),
-                ('contact_email', models.EmailField(blank=True, max_length=254)),
-                ('logo_url', models.URLField(blank=True, max_length=500)),
-                ('status', models.CharField(choices=[('draft', 'Draft'), ('published', 'Published'), ('archived', 'Archived')], db_index=True, default='draft', max_length=20)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("company_name", models.CharField(max_length=255)),
+                ("slug", models.SlugField(max_length=255, unique=True)),
+                ("short_description", models.CharField(blank=True, max_length=500)),
+                ("description", models.TextField(blank=True)),
+                ("website", models.URLField(blank=True, max_length=500)),
+                ("contact_email", models.EmailField(blank=True, max_length=254)),
+                ("logo_url", models.URLField(blank=True, max_length=500)),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("draft", "Draft"),
+                            ("published", "Published"),
+                            ("archived", "Archived"),
+                        ],
+                        db_index=True,
+                        default="draft",
+                        max_length=20,
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
             ],
             options={
-                'ordering': ['company_name'],
+                "ordering": ["company_name"],
             },
         ),
     ]
