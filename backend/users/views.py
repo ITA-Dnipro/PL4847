@@ -1,11 +1,39 @@
+import base64
+import logging
+
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import EmailMultiAlternatives, send_mail
+from django.template.exceptions import TemplateDoesNotExist
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.throttling import AnonRateThrottle
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from .serializers import PasswordResetConfirmSerializer, PasswordResetRequestSerializer
+
+User = get_user_model()
+logger = logging.getLogger(__name__)
+
+
+class PasswordResetRequestThrottle(AnonRateThrottle):
+    rate = "5/min"
+
+
+class PasswordResetConfirmThrottle(AnonRateThrottle):
+    rate = "5/min"
+
 
 class LogoutView(APIView):
+    """
+    POST /api/auth/logout/
+    Endpoint to blacklist refresh token and logout user.
+    """
     permission_classes = (AllowAny,)
 
     def post(self, request):
@@ -24,34 +52,6 @@ class LogoutView(APIView):
                 {"error": "Invalid or expired refresh token"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-import base64
-import logging
-
-from django.conf import settings
-from django.contrib.auth import get_user_model
-from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import EmailMultiAlternatives, send_mail
-from django.template.exceptions import TemplateDoesNotExist
-from django.template.loader import render_to_string
-from django.utils.encoding import force_bytes
-from rest_framework import status
-from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
-from rest_framework.throttling import AnonRateThrottle
-from rest_framework.views import APIView
-
-from .serializers import PasswordResetConfirmSerializer, PasswordResetRequestSerializer
-
-User = get_user_model()
-logger = logging.getLogger(__name__)
-
-
-class PasswordResetRequestThrottle(AnonRateThrottle):
-    rate = "5/min"
-
-
-class PasswordResetConfirmThrottle(AnonRateThrottle):
-    rate = "5/min"
 
 
 class PasswordResetRequestView(APIView):
