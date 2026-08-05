@@ -40,8 +40,10 @@ jobs:
       DJANGO_SETTINGS_MODULE: project.settings.dev
 
     steps:
-      - name: Install git (missing in python:3.12-slim)
-        run: apt-get update && apt-get install -y --no-install-recommends git
+      - name: Install required system dependencies
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends git curl gnupg
 
       - name: Checkout code
         uses: actions/checkout@v4
