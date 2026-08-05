@@ -45,7 +45,7 @@ services:
       timeout: 10s
       retries: 3
       start_period: 30s
-  
+
   frontend:
     build:
       context: ./frontend
@@ -66,4 +66,4 @@ services:
       - "5173:5173"
 
 volumes:
-  postgres_data: 
+  postgres_data:

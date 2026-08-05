@@ -1,4 +1,9 @@
 # Forum-Project-Stage-CC
+
+![CI](https://github.com/ITA-Dnipro/PL4847/actions/workflows/ci.yml/badge.svg?branch=develop)
+[![Codecov](https://codecov.io/gh/ITA-Dnipro/PL4847/branch/develop/graph/badge.svg)](https://codecov.io/gh/ITA-Dnipro PL4847)
+![Dependencies](https://img.shields.io/badge/dependencies-Dependabot-enabled-blue)
+
 Forum Project Stage CC Template Repo
 
 **Project Vision Statement:**
@@ -35,37 +40,37 @@ We are committed to delivering a platform that is not just a marketplace for ide
      - implement the functionality for users to select and switch roles.
 
 2. **As a startup company,** I want to create a profile on the platform, so that I can present my ideas and proposals to potential investors.
-   
+
    - Features:
      -  user registration functionality for startups.
      -  profile setup page where startups can add details about their company and ideas.
 
 3. **As an investor,** I want to view profiles of startups, so that I can find promising ideas to invest in.
-   
+
    - Features:
      -  feature for investors to browse and filter startup profiles.
      -  viewing functionality for detailed startup profiles.
 
 4. **As a startup company,** I want to update my project information, so that I can keep potential investors informed about our progress and milestones.
-   
+
    - Features:
      -  functionality for startups to edit and update their project information.
      -  system to notify investors about updates to startups they are following.
 
 5. **As an investor,** I want to be able to contact startups directly through the platform, so that I can discuss investment opportunities.
-   
+
    - Features:
      -  secure messaging system within the platform for communication between startups and investors.
      -  privacy and security measures to protect the communication.
 
 6. **As a startup company,** I want to receive notifications about interested investors, so that I can engage with them promptly.
-   
+
    - Features:
      -  notification functionality for startups when an investor shows interest or contacts them.
      -  dashboard for startups to view and manage investor interactions.
 
 7. **As an investor,** I want to save and track startups that interest me, so that I can manage my investment opportunities effectively.
-   
+
    - Features:
      -  feature for investors to save and track startups.
      -  dashboard for investors to manage their saved startups and investment activities.
@@ -73,7 +78,7 @@ We are committed to delivering a platform that is not just a marketplace for ide
 ### Additional Features
 
 - **Security and Data Protection**: Ensure that user data, especially sensitive financial information, is securely handled.
-  
+
 - **User Feedback System**: Create a system for users to provide feedback on the platform, contributing to continuous improvement.
 
 - **Analytical Tools**: Implement analytical tools for startups to understand investor engagement and for investors to analyze startup potential.
@@ -84,14 +89,14 @@ We are committed to delivering a platform that is not just a marketplace for ide
 - Regular feedback from both user groups (startups and investors) should be incorporated.
 
 ###
- 
+
 - Go to the Actions -> Workflow Run -> Job (Backend/Frontend) tab.
 - Find the step marked with a red cross.
 - Expand it: the files and line numbers containing errors will be listed there.
 
 ## Running the Project
 
-First-time setup: 
+First-time setup:
   - copy `backend/.env.example` to `backend/.env`
   - copy `frontend/.env.example` to `frontend/.env`
   - copy  `./.env.example` to `./.env`
@@ -109,3 +114,37 @@ Stop containers
 ```bash
 docker compose down
 ```
+
+## Dependency and security updates
+
+Dependency updates are managed with GitHub Dependabot.
+
+Dependabot checks the project weekly for updates to:
+
+- Python packages in `backend/requirements.txt`
+- npm packages in `frontend/package.json`
+- GitHub Actions used in workflow files
+
+Dependabot creates pull requests when dependency updates are available.
+Each update should be reviewed and validated by CI before merging.
+
+Security-related dependency updates should be reviewed with priority.
+Passwords, API tokens, secret keys, and other sensitive values must not be
+committed to the repository. Local secrets should be stored in `.env` files.
+
+## Code coverage
+
+Code coverage is uploaded to Codecov through the GitHub Actions CI workflow.
+
+The repository must contain a GitHub Actions secret named `CODECOV_TOKEN`.
+It should be configured in:
+
+`Settings` → `Secrets and variables` → `Actions`
+
+The token must not be committed to the repository.
+
+The Codecov upload step uses `fail_ci_if_error: false`.
+
+If `CODECOV_TOKEN` is missing or incorrect, or if the Codecov upload fails,
+the error will be reported in the workflow logs, but it will not fail the
+entire CI pipeline.
