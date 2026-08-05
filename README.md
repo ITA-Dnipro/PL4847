@@ -1,4 +1,9 @@
 # Forum-Project-Stage-CC
+
+![CI](https://github.com/ITA-Dnipro/PL4847/actions/workflows/ci.yml/badge.svg?branch=develop)
+[![Codecov](https://codecov.io/gh/ITA-Dnipro/PL4847/branch/develop/graph/badge.svg)](https://codecov.io/gh/ITA-Dnipro PL4847)
+![Dependencies](https://img.shields.io/badge/dependencies-Dependabot-enabled-blue)
+
 Forum Project Stage CC Template Repo
 
 **Project Vision Statement:**
@@ -109,3 +114,37 @@ Stop containers
 ```bash
 docker compose down
 ```
+
+## Dependency and security updates
+
+Dependency updates are managed with GitHub Dependabot.
+
+Dependabot checks the project weekly for updates to:
+
+- Python packages in `backend/requirements.txt`
+- npm packages in `frontend/package.json`
+- GitHub Actions used in workflow files
+
+Dependabot creates pull requests when dependency updates are available.
+Each update should be reviewed and validated by CI before merging.
+
+Security-related dependency updates should be reviewed with priority.
+Passwords, API tokens, secret keys, and other sensitive values must not be
+committed to the repository. Local secrets should be stored in `.env` files.
+
+## Code coverage
+
+Code coverage is uploaded to Codecov through the GitHub Actions CI workflow.
+
+The repository must contain a GitHub Actions secret named `CODECOV_TOKEN`.
+It should be configured in:
+
+`Settings` → `Secrets and variables` → `Actions`
+
+The token must not be committed to the repository.
+
+The Codecov upload step uses `fail_ci_if_error: false`.
+
+If `CODECOV_TOKEN` is missing or incorrect, or if the Codecov upload fails,
+the error will be reported in the workflow logs, but it will not fail the
+entire CI pipeline.
