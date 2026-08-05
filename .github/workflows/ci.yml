@@ -113,6 +113,13 @@ jobs:
           pytest 2>&1 | tee /tmp/tests.log
           exit ${PIPESTATUS[0]}
 
+      - name: Upload coverage to Codecov
+        if: always()
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+
       - name: Report all backend check results
         if: always()
         run: |

@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     "investors",
     "dashboard",
     "rest_framework_simplejwt.token_blacklist",
+    "content",
 ]
 
 MIDDLEWARE = [
@@ -105,3 +106,4 @@ SIMPLE_JWT = {
     "BLACKLIST_AFTER_ROTATION": False,
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
+AUTH_USER_MODEL = "users.User"

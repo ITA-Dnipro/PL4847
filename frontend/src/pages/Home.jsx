@@ -1,5 +1,17 @@
+import CTASection from "../components/CTASection"
+import ForWhomGrid from "../components/ForWhomGrid"
+import WhyWorthGrid from "../components/WhyWorthGrid"
+
+
 function Home() {
-  return <h1>Home page</h1>;
+  return ( <
+    div>
+      <h1>Home page</h1>
+      <CTASection />
+      <ForWhomGrid />
+      <WhyWorthGrid />
+    </div>
+)
 }
 
 export default Home;
