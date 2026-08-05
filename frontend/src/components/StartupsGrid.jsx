@@ -12,14 +12,14 @@ function normalizeNextUrl(nextUrl) {
     if (!nextUrl) return null;
 
     if (nextUrl.startsWith("/api/")) {
-        return nextUrl;
+        return `${API_PREFIX}${nextUrl}`;
     }
 
     try {
         const parsedUrl = new URL(nextUrl, window.location.origin);
 
         if (parsedUrl.pathname.startsWith("/api/")) {
-            return `${parsedUrl.pathname}${parsedUrl.search}${parsedUrl.hash}`;
+            return parsedUrl.toString();
         }
     } catch {
         return nextUrl;

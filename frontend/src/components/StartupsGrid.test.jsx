@@ -108,7 +108,7 @@ describe("StartupsGrid", () => {
         expect(await screen.findByText("Second Company")).toBeInTheDocument()
         expect(screen.getByText("First Company")).toBeInTheDocument()
         expect(screen.queryByText("View more")).not.toBeInTheDocument()
-        expect(global.fetch).toHaveBeenNthCalledWith(2, "/api/startups/?page=2")
+        expect(global.fetch).toHaveBeenNthCalledWith(2, "http://api.test/api/startups/?page=2")
     })
 
     it("shows a pagination-specific error when loading the next page fails", async () => {
