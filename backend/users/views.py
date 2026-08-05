@@ -34,6 +34,7 @@ class LogoutView(APIView):
     POST /api/auth/logout/
     Endpoint to blacklist refresh token and logout user.
     """
+
     permission_classes = (AllowAny,)
 
     def post(self, request):
