@@ -1,0 +1,487 @@
+[
+  {
+    "model": "users.user",
+    "pk": "00000000-0000-0000-0000-000000000001",
+    "fields": {
+      "password": "!",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "user1",
+      "first_name": "User",
+      "last_name": "One",
+      "email": "user1@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-01-05T10:00:00Z",
+      "role": "startup",
+      "created_at": "2026-01-05T10:00:00Z",
+      "updated_at": "2026-01-05T10:00:00Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": "00000000-0000-0000-0000-000000000002",
+    "fields": {
+      "password": "!",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "user2",
+      "first_name": "User",
+      "last_name": "Two",
+      "email": "user2@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-01-06T10:00:00Z",
+      "role": "startup",
+      "created_at": "2026-01-06T10:00:00Z",
+      "updated_at": "2026-01-06T10:00:00Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": "00000000-0000-0000-0000-000000000003",
+    "fields": {
+      "password": "!",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "user3",
+      "first_name": "User",
+      "last_name": "Three",
+      "email": "user3@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-01-07T10:00:00Z",
+      "role": "startup",
+      "created_at": "2026-01-07T10:00:00Z",
+      "updated_at": "2026-01-07T10:00:00Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": "00000000-0000-0000-0000-000000000004",
+    "fields": {
+      "password": "!",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "user4",
+      "first_name": "User",
+      "last_name": "Four",
+      "email": "user4@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-01-08T10:00:00Z",
+      "role": "startup",
+      "created_at": "2026-01-08T10:00:00Z",
+      "updated_at": "2026-01-08T10:00:00Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": "00000000-0000-0000-0000-000000000005",
+    "fields": {
+      "password": "!",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "user5",
+      "first_name": "User",
+      "last_name": "Five",
+      "email": "user5@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-01-09T10:00:00Z",
+      "role": "startup",
+      "created_at": "2026-01-09T10:00:00Z",
+      "updated_at": "2026-01-09T10:00:00Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": "00000000-0000-0000-0000-000000000006",
+    "fields": {
+      "password": "!",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "user6",
+      "first_name": "User",
+      "last_name": "Six",
+      "email": "user6@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-01-10T10:00:00Z",
+      "role": "startup",
+      "created_at": "2026-01-10T10:00:00Z",
+      "updated_at": "2026-01-10T10:00:00Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": "00000000-0000-0000-0000-000000000007",
+    "fields": {
+      "password": "!",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "user7",
+      "first_name": "User",
+      "last_name": "Seven",
+      "email": "user7@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-01-11T10:00:00Z",
+      "role": "startup",
+      "created_at": "2026-01-11T10:00:00Z",
+      "updated_at": "2026-01-11T10:00:00Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": "00000000-0000-0000-0000-000000000008",
+    "fields": {
+      "password": "!",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "user8",
+      "first_name": "User",
+      "last_name": "Eight",
+      "email": "user8@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-01-12T10:00:00Z",
+      "role": "startup",
+      "created_at": "2026-01-12T10:00:00Z",
+      "updated_at": "2026-01-12T10:00:00Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": "00000000-0000-0000-0000-000000000009",
+    "fields": {
+      "password": "!",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "user9",
+      "first_name": "User",
+      "last_name": "Nine",
+      "email": "user9@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-01-13T10:00:00Z",
+      "role": "startup",
+      "created_at": "2026-01-13T10:00:00Z",
+      "updated_at": "2026-01-13T10:00:00Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": "00000000-0000-0000-0000-00000000000a",
+    "fields": {
+      "password": "!",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "user10",
+      "first_name": "User",
+      "last_name": "Ten",
+      "email": "user10@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-01-14T10:00:00Z",
+      "role": "startup",
+      "created_at": "2026-01-14T10:00:00Z",
+      "updated_at": "2026-01-14T10:00:00Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "startups.location",
+    "pk": 1,
+    "fields": {"name": "Chernivtsi", "slug": "chernivtsi"}
+  },
+  {
+    "model": "startups.location",
+    "pk": 2,
+    "fields": {"name": "Lviv", "slug": "lviv"}
+  },
+  {
+    "model": "startups.location",
+    "pk": 3,
+    "fields": {"name": "Kyiv", "slug": "kyiv"}
+  },
+  {
+    "model": "startups.location",
+    "pk": 4,
+    "fields": {"name": "Odesa", "slug": "odesa"}
+  },
+  {
+    "model": "startups.location",
+    "pk": 5,
+    "fields": {"name": "Kharkiv", "slug": "kharkiv"}
+  },
+  {
+    "model": "startups.location",
+    "pk": 6,
+    "fields": {"name": "Ivano-Frankivsk", "slug": "ivano-frankivsk"}
+  },
+  {
+    "model": "startups.location",
+    "pk": 7,
+    "fields": {"name": "Dnipro", "slug": "dnipro"}
+  },
+  {
+    "model": "startups.tag",
+    "pk": 1,
+    "fields": {"name": "Craft", "slug": "craft"}
+  },
+  {
+    "model": "startups.tag",
+    "pk": 2,
+    "fields": {"name": "Pottery", "slug": "pottery"}
+  },
+  {
+    "model": "startups.tag",
+    "pk": 3,
+    "fields": {"name": "SaaS", "slug": "saas"}
+  },
+  {
+    "model": "startups.tag",
+    "pk": 4,
+    "fields": {"name": "FinTech", "slug": "fintech"}
+  },
+  {
+    "model": "startups.tag",
+    "pk": 5,
+    "fields": {"name": "EdTech", "slug": "edtech"}
+  },
+  {
+    "model": "startups.tag",
+    "pk": 6,
+    "fields": {"name": "Eco", "slug": "eco"}
+  },
+  {
+    "model": "startups.tag",
+    "pk": 7,
+    "fields": {"name": "HealthTech", "slug": "healthtech"}
+  },
+  {
+    "model": "startups.tag",
+    "pk": 8,
+    "fields": {"name": "Food", "slug": "food"}
+  },
+  {
+    "model": "startups.startupprofile",
+    "pk": "8f14e45f-ceea-467e-adb2-000000000001",
+    "fields": {
+      "user": "00000000-0000-0000-0000-000000000001",
+      "company_name": "Handmade Co",
+      "slug": "handmade-co",
+      "short_description": "Woodwork and ceramics",
+      "description": "Handmade Co crafts wooden furniture and ceramic tableware.",
+      "website": "https://handmadeco.example.com",
+      "contact_email": "hello@handmadeco.example.com",
+      "logo_url": "https://handmadeco.example.com/media/logos/1.jpg",
+      "thumbnail_url": "https://handmadeco.example.com/media/thumbs/1.jpg",
+      "location": 1,
+      "status": "published",
+      "tags": [1, 2],
+      "created_at": "2026-01-05T10:00:00Z",
+      "updated_at": "2026-01-05T10:00:00Z"
+    }
+  },
+  {
+    "model": "startups.startupprofile",
+    "pk": "8f14e45f-ceea-467e-adb2-000000000002",
+    "fields": {
+      "user": "00000000-0000-0000-0000-000000000002",
+      "company_name": "CloudLedger",
+      "slug": "cloudledger",
+      "short_description": "Cloud-based accounting for small business",
+      "description": "CloudLedger helps small businesses manage invoices and taxes.",
+      "website": "https://cloudledger.example.com",
+      "contact_email": "hello@cloudledger.example.com",
+      "logo_url": "https://cloudledger.example.com/media/logos/2.jpg",
+      "thumbnail_url": "https://cloudledger.example.com/media/thumbs/2.jpg",
+      "location": 2,
+      "status": "published",
+      "tags": [3, 4],
+      "created_at": "2026-01-06T10:00:00Z",
+      "updated_at": "2026-01-06T10:00:00Z"
+    }
+  },
+  {
+    "model": "startups.startupprofile",
+    "pk": "8f14e45f-ceea-467e-adb2-000000000003",
+    "fields": {
+      "user": "00000000-0000-0000-0000-000000000003",
+      "company_name": "EduSpark",
+      "slug": "eduspark",
+      "short_description": "Interactive learning platform for kids",
+      "description": "EduSpark builds gamified lessons for primary school students.",
+      "website": "https://eduspark.example.com",
+      "contact_email": "hello@eduspark.example.com",
+      "logo_url": "https://eduspark.example.com/media/logos/3.jpg",
+      "thumbnail_url": "https://eduspark.example.com/media/thumbs/3.jpg",
+      "location": 3,
+      "status": "published",
+      "tags": [5],
+      "created_at": "2026-01-07T10:00:00Z",
+      "updated_at": "2026-01-07T10:00:00Z"
+    }
+  },
+  {
+    "model": "startups.startupprofile",
+    "pk": "8f14e45f-ceea-467e-adb2-000000000004",
+    "fields": {
+      "user": "00000000-0000-0000-0000-000000000004",
+      "company_name": "GreenLoop",
+      "slug": "greenloop",
+      "short_description": "Recycling solutions for households",
+      "description": "GreenLoop provides smart bins and pickup scheduling for recyclables.",
+      "website": "https://greenloop.example.com",
+      "contact_email": "hello@greenloop.example.com",
+      "logo_url": "https://greenloop.example.com/media/logos/4.jpg",
+      "thumbnail_url": "https://greenloop.example.com/media/thumbs/4.jpg",
+      "location": 4,
+      "status": "published",
+      "tags": [6],
+      "created_at": "2026-01-08T10:00:00Z",
+      "updated_at": "2026-01-08T10:00:00Z"
+    }
+  },
+  {
+    "model": "startups.startupprofile",
+    "pk": "8f14e45f-ceea-467e-adb2-000000000005",
+    "fields": {
+      "user": "00000000-0000-0000-0000-000000000005",
+      "company_name": "VitalCheck",
+      "slug": "vitalcheck",
+      "short_description": "Remote patient monitoring wearables",
+      "description": "VitalCheck develops wearable sensors for chronic disease monitoring.",
+      "website": "https://vitalcheck.example.com",
+      "contact_email": "hello@vitalcheck.example.com",
+      "logo_url": "https://vitalcheck.example.com/media/logos/5.jpg",
+      "thumbnail_url": "https://vitalcheck.example.com/media/thumbs/5.jpg",
+      "location": 5,
+      "status": "published",
+      "tags": [7],
+      "created_at": "2026-01-09T10:00:00Z",
+      "updated_at": "2026-01-09T10:00:00Z"
+    }
+  },
+  {
+    "model": "startups.startupprofile",
+    "pk": "8f14e45f-ceea-467e-adb2-000000000006",
+    "fields": {
+      "user": "00000000-0000-0000-0000-000000000006",
+      "company_name": "FarmBasket",
+      "slug": "farmbasket",
+      "short_description": "Farm-to-door grocery delivery",
+      "description": "FarmBasket connects local farmers directly with city customers.",
+      "website": "https://farmbasket.example.com",
+      "contact_email": "hello@farmbasket.example.com",
+      "logo_url": "https://farmbasket.example.com/media/logos/6.jpg",
+      "thumbnail_url": "https://farmbasket.example.com/media/thumbs/6.jpg",
+      "location": 2,
+      "status": "published",
+      "tags": [8, 6],
+      "created_at": "2026-01-10T10:00:00Z",
+      "updated_at": "2026-01-10T10:00:00Z"
+    }
+  },
+  {
+    "model": "startups.startupprofile",
+    "pk": "8f14e45f-ceea-467e-adb2-000000000007",
+    "fields": {
+      "user": "00000000-0000-0000-0000-000000000007",
+      "company_name": "PayFlow",
+      "slug": "payflow",
+      "short_description": "Instant payments API for marketplaces",
+      "description": "PayFlow offers a developer-friendly payments API with instant payouts.",
+      "website": "https://payflow.example.com",
+      "contact_email": "hello@payflow.example.com",
+      "logo_url": "https://payflow.example.com/media/logos/7.jpg",
+      "thumbnail_url": "https://payflow.example.com/media/thumbs/7.jpg",
+      "location": 3,
+      "status": "published",
+      "tags": [3, 4],
+      "created_at": "2026-01-11T10:00:00Z",
+      "updated_at": "2026-01-11T10:00:00Z"
+    }
+  },
+  {
+    "model": "startups.startupprofile",
+    "pk": "8f14e45f-ceea-467e-adb2-000000000008",
+    "fields": {
+      "user": "00000000-0000-0000-0000-000000000008",
+      "company_name": "ClayWorks Studio",
+      "slug": "clayworks-studio",
+      "short_description": "Handcrafted pottery workshops and goods",
+      "description": "ClayWorks Studio teaches pottery classes and sells handmade ceramics.",
+      "website": "https://clayworks.example.com",
+      "contact_email": "hello@clayworks.example.com",
+      "logo_url": "https://clayworks.example.com/media/logos/8.jpg",
+      "thumbnail_url": "https://clayworks.example.com/media/thumbs/8.jpg",
+      "location": 6,
+      "status": "published",
+      "tags": [1, 2],
+      "created_at": "2026-01-12T10:00:00Z",
+      "updated_at": "2026-01-12T10:00:00Z"
+    }
+  },
+  {
+    "model": "startups.startupprofile",
+    "pk": "8f14e45f-ceea-467e-adb2-000000000009",
+    "fields": {
+      "user": "00000000-0000-0000-0000-000000000009",
+      "company_name": "MindGrow",
+      "slug": "mindgrow",
+      "short_description": "Adaptive tutoring platform for teens",
+      "description": "MindGrow uses adaptive quizzes to personalize learning paths for teens.",
+      "website": "https://mindgrow.example.com",
+      "contact_email": "hello@mindgrow.example.com",
+      "logo_url": "https://mindgrow.example.com/media/logos/9.jpg",
+      "thumbnail_url": "https://mindgrow.example.com/media/thumbs/9.jpg",
+      "location": 7,
+      "status": "published",
+      "tags": [5],
+      "created_at": "2026-01-13T10:00:00Z",
+      "updated_at": "2026-01-13T10:00:00Z"
+    }
+  },
+  {
+    "model": "startups.startupprofile",
+    "pk": "8f14e45f-ceea-467e-adb2-000000000010",
+    "fields": {
+      "user": "00000000-0000-0000-0000-00000000000a",
+      "company_name": "DraftBench",
+      "slug": "draftbench",
+      "short_description": "Not yet ready for prime time",
+      "description": "DraftBench profile kept as draft to verify it is excluded from listing.",
+      "website": "",
+      "contact_email": "",
+      "logo_url": "https://draftbench.example.com/media/logos/10.jpg",
+      "thumbnail_url": "https://draftbench.example.com/media/thumbs/10.jpg",
+      "location": 2,
+      "status": "draft",
+      "tags": [],
+      "created_at": "2026-01-14T10:00:00Z",
+      "updated_at": "2026-01-14T10:00:00Z"
+    }
+  }
+]
