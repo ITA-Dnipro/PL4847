@@ -21,7 +21,6 @@ class PasswordResetRequestSerializer(serializers.Serializer):
 class PasswordResetConfirmSerializer(serializers.Serializer):
     """Serializer for confirming and setting a new password via reset token."""
 
-class PasswordResetConfirmSerializer(serializers.Serializer):
     token = serializers.CharField(required=True)
     password = serializers.CharField(
         write_only=True, required=True, style={"input_type": "password"}

@@ -59,40 +59,6 @@ class LogoutView(APIView):
             )
 
 
-class PasswordResetRequestThrottle(AnonRateThrottle):
-    rate = "5/min"
-
-
-class PasswordResetConfirmThrottle(AnonRateThrottle):
-    rate = "5/min"
-
-
-class LogoutView(APIView):
-    """
-    POST /api/auth/logout/
-    Endpoint to blacklist refresh token and logout user.
-    """
-
-    permission_classes = (AllowAny,)
-
-    def post(self, request):
-        try:
-            refresh_token = request.data.get("refresh")
-            if not refresh_token:
-                return Response(
-                    {"error": "Refresh token is required"},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except Exception:
-            return Response(
-                {"error": "Invalid or expired refresh token"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-
 class PasswordResetRequestView(APIView):
     """
     POST /api/auth/password-reset/
@@ -174,63 +140,6 @@ class PasswordResetRequestView(APIView):
                 status=status.HTTP_200_OK,
             )
 
-            try:
-                user = User.objects.get(email=email)
-                token = default_token_generator.make_token(user)
-                uidb64 = (
-                    base64.urlsafe_b64encode(force_bytes(user.pk)).decode().rstrip("=")
-                )
-                combined_token = f"{uidb64}:{token}"
-
-                frontend_url = getattr(
-                    settings, "FRONTEND_URL", "http://localhost:3000"
-                )
-                reset_link = f"{frontend_url}/reset-password?token={combined_token}"
-
-                context = {
-                    "user": user,
-                    "reset_url": reset_link,
-                }
-                subject = "Скидання пароля"
-                from_email = getattr(
-                    settings, "DEFAULT_FROM_EMAIL", "noreply@example.com"
-                )
-
-                try:
-                    text_content = render_to_string(
-                        "emails/password_reset_email.txt", context
-                    )
-                    html_content = render_to_string(
-                        "emails/password_reset_email.html", context
-                    )
-
-                    msg = EmailMultiAlternatives(
-                        subject,
-                        text_content,
-                        from_email,
-                        [email],
-                    )
-                    msg.attach_alternative(html_content, "text/html")
-                    msg.send()
-                except TemplateDoesNotExist:
-                    send_mail(
-                        subject=subject,
-                        message=f"Password reset link: {reset_link}",
-                        from_email=from_email,
-                        recipient_list=[email],
-                    )
-
-                logger.info("AUDIT: Password reset requested for user_id=%s", user.pk)
-            except User.DoesNotExist:
-                logger.info("Password reset requested for non-existing email.")
-
-            return Response(
-                {
-                    "detail": "If this email exists, a password reset link has been sent."
-                },
-                status=status.HTTP_200_OK,
-            )
-
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -258,7 +167,6 @@ class PasswordResetConfirmView(APIView):
             )
             return Response(
                 {"message": "Password has been reset successfully."},
-                {"detail": "Password changed successfully."},
                 status=status.HTTP_200_OK,
             )
 
