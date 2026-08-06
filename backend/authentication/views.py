@@ -1,4 +1,5 @@
 import logging
+
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.shortcuts import render
@@ -26,7 +27,7 @@ class VerifyEmailView(APIView):
                 {"detail": "Token is required."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        
+
         user = verify_verification_token(token)
         if user is None:
             return Response(
@@ -53,11 +54,15 @@ class ResendVerificationView(APIView):
         if email:
             user = User.objects.filter(email__iexact=email).first()
             if user is not None and not user.is_active:
+
                 def _send_email_safely():
                     try:
                         send_verification_email(user)
                     except Exception:
-                        logger.exception("Failed to send verification email to user ID %s", user.pk)
+                        logger.exception(
+                            "Failed to send verification email to user ID %s", user.pk
+                        )
+
                 transaction.on_commit(_send_email_safely)
 
         return Response(status=status.HTTP_200_OK)

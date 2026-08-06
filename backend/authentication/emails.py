@@ -1,10 +1,12 @@
 import logging
+
 from django.conf import settings
 from django.core.mail import send_mail
 
 from .tokens import generate_verification_token, get_max_age
 
 logger = logging.getLogger(__name__)
+
 
 def build_verification_url(token: str) -> str:
     frontend_url = getattr(settings, "FRONTEND_URL", "").rstrip("/")
@@ -15,7 +17,7 @@ def build_verification_url(token: str) -> str:
 def send_verification_email(user):
     token = generate_verification_token(user)
     verify_url = f"{settings.FRONTEND_URL}/verify-email?token={token}"
-    
+
     max_age = get_max_age()
     if max_age < 3600:
         minutes = max_age // 60
@@ -26,7 +28,7 @@ def send_verification_email(user):
 
     subject = "Verify your email"
     message = f"Please verify your email using the following link. This link will expire in {duration}:\n\n{verify_url}"
-    
+
     try:
         send_mail(
             subject,
