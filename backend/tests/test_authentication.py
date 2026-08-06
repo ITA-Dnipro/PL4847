@@ -8,6 +8,16 @@ from authentication.tokens import generate_verification_token, verify_verificati
 User = get_user_model()
 
 
+@pytest.fixture(autouse=True)
+def use_dummy_cache_for_throttling(settings):
+    """Використовуємо DummyCache для тестів, щоб запобігти проблемам з throttle у пам'яті."""
+    settings.CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+        }
+    }
+
+
 @pytest.mark.django_db
 def test_verify_email_activates_account():
     user = User.objects.create_user(
