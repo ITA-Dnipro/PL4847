@@ -13,10 +13,14 @@ logger = logging.getLogger(__name__)
 
 
 class PasswordResetRequestSerializer(serializers.Serializer):
-    email = serializers.EmailField()
+    """Serializer for requesting a password reset email."""
+
+    email = serializers.EmailField(required=True)
 
 
 class PasswordResetConfirmSerializer(serializers.Serializer):
+    """Serializer for confirming and setting a new password via reset token."""
+
     token = serializers.CharField(required=True)
     password = serializers.CharField(
         write_only=True, required=True, style={"input_type": "password"}
