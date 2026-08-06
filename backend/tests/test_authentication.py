@@ -1,21 +1,21 @@
 import pytest
+from authentication.tokens import generate_verification_token, verify_verification_token
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
 from rest_framework import status
 from rest_framework.test import APIClient
-
-from authentication.tokens import generate_verification_token, verify_verification_token
 
 User = get_user_model()
 
 
 @pytest.fixture(autouse=True)
-def use_dummy_cache_for_throttling(settings):
-    """Використовуємо DummyCache для тестів, щоб запобігти проблемам з throttle у пам'яті."""
-    settings.CACHES = {
-        "default": {
-            "BACKEND": "django.core.cache.backends.dummy.DummyCache",
-        }
+def disable_throttling_for_tests(settings):
+    settings.REST_FRAMEWORK = {
+        **getattr(settings, "REST_FRAMEWORK", {}),
+        "DEFAULT_THROTTLE_CLASSES": [],
+        "DEFAULT_THROTTLE_RATES": {},
     }
+    cache.clear()
 
 
 @pytest.mark.django_db
@@ -62,8 +62,6 @@ def test_verify_email_rejects_expired_token():
     )
     token = generate_verification_token(user)
 
-    # Directly exercise the token validator with a max_age of 0 seconds,
-    # which is equivalent to the token already being expired.
     assert verify_verification_token(token, max_age=0) is None
 
 

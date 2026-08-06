@@ -61,9 +61,9 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.UserRateThrottle",
     ],
     "DEFAULT_THROTTLE_RATES": {
-        "anon": "100/day",    
-        "user": "1000/day",    
-        "resend": "1/min",     
+        "anon": "100/day",
+        "user": "1000/day",
+        "resend": "1/min",
     },
 }
 ROOT_URLCONF = "project.urls"

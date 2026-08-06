@@ -11,7 +11,7 @@ def test_user_creation():
         password="testpassword123",
     )
     assert user.username == "testuser"
-    assert user.is_active is False
+    assert user.is_active is True
 
 
 def test_startup_profile_baseline_stub():

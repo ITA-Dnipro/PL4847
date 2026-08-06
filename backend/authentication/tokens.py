@@ -4,7 +4,7 @@ from django.core import signing
 
 TOKEN_SALT = "authentication.email-verification"
 
-DEFAULT_MAX_AGE = 60 * 60 * 24  
+DEFAULT_MAX_AGE = 60 * 60 * 24
 
 
 def _signer() -> signing.TimestampSigner:

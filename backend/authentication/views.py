@@ -1,10 +1,10 @@
-from django.shortcuts import render
 from django.contrib.auth import get_user_model
+from django.shortcuts import render
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.throttling import ScopedRateThrottle
+from rest_framework.views import APIView
 
 from .emails import send_verification_email
 from .tokens import verify_verification_token
@@ -41,7 +41,7 @@ class ResendVerificationView(APIView):
 
     permission_classes = (AllowAny,)
     throttle_classes = [ScopedRateThrottle]
-    throttle_scope = 'resend'
+    throttle_scope = "resend"
 
     def post(self, request):
         email = request.data.get("email")
