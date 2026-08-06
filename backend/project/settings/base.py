@@ -2,6 +2,7 @@
 Базові налаштування Django, спільні для dev/prod.
 """
 
+from datetime import timedelta
 from pathlib import Path
 
 import environ
@@ -28,6 +29,7 @@ INSTALLED_APPS = [
     "messages",
     "investors",
     "dashboard",
+    "rest_framework_simplejwt.token_blacklist",
     "content",
     "authentication",
 ]
@@ -48,6 +50,7 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ],
@@ -105,6 +108,14 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": False,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+}
 AUTH_USER_MODEL = "users.User"
 
 EMAIL_BACKEND = env(
