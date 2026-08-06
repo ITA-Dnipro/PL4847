@@ -219,3 +219,6 @@ __marimo__/
 
 # Aider AI coding assistant
 .aider*
+
+# PyCharm / JetBrains IDE settings
+.idea/
