@@ -17,7 +17,16 @@ def generate_verification_token(user) -> str:
 
 
 def get_max_age() -> int:
-    return getattr(settings, "EMAIL_VERIFICATION_TOKEN_MAX_AGE", DEFAULT_MAX_AGE)
+    value = getattr(settings, "EMAIL_VERIFICATION_TOKEN_MAX_AGE", None)
+    if value is None:
+        return DEFAULT_MAX_AGE
+    try:
+        parsed_value = int(value)
+        if parsed_value <= 0:
+            return DEFAULT_MAX_AGE
+        return parsed_value
+    except (TypeError, ValueError):
+        return DEFAULT_MAX_AGE
 
 
 def verify_verification_token(token: str, max_age: int | None = None):

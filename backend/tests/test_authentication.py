@@ -76,7 +76,7 @@ def test_resend_verification_returns_200_for_unknown_email():
     assert response.status_code == status.HTTP_200_OK
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_resend_verification_sends_mail_for_inactive_user(mailoutbox):
     User.objects.create_user(
         username="resend-user",
