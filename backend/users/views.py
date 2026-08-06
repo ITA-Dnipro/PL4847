@@ -4,7 +4,8 @@ import logging
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, send_mail
+from django.template.exceptions import TemplateDoesNotExist
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from rest_framework import status
@@ -12,6 +13,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from .serializers import PasswordResetConfirmSerializer, PasswordResetRequestSerializer
 
@@ -23,17 +25,54 @@ class PasswordResetThrottle(AnonRateThrottle):
     rate = "5/min"
 
 
-class PasswordResetRequestView(APIView):
-    permission_classes = [AllowAny]
-    throttle_classes = [PasswordResetThrottle]
+class PasswordResetRequestThrottle(AnonRateThrottle):
+    rate = "5/min"
+
+
+class PasswordResetConfirmThrottle(AnonRateThrottle):
+    rate = "5/min"
+
+
+class LogoutView(APIView):
+    """
+    POST /api/auth/logout/
+    Endpoint to blacklist refresh token and logout user.
+    """
+
+    permission_classes = (AllowAny,)
 
     def post(self, request):
+        try:
+            refresh_token = request.data.get("refresh")
+            if not refresh_token:
+                return Response(
+                    {"error": "Refresh token is required"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Exception:
+            return Response(
+                {"error": "Invalid or expired refresh token"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+
+class PasswordResetRequestView(APIView):
+    """
+    POST /api/auth/password-reset/
+    Endpoint to request a password reset email.
+    """
+
+    permission_classes = [AllowAny]
+    throttle_classes = [PasswordResetRequestThrottle]
+
+    def post(self, request, *args, **kwargs):
         serializer = PasswordResetRequestSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.validated_data["email"]
 
-            # Використовуємо filter().first() замість get(),
-            # щоб уникнути User.MultipleObjectsReturned
             user = User.objects.filter(email__iexact=email, is_active=True).first()
 
             if user:
@@ -55,40 +94,41 @@ class PasswordResetRequestView(APIView):
 
                     context = {"user": user, "reset_url": reset_url}
                     subject = "Скидання пароля"
-                    text_content = render_to_string(
-                        "emails/password_reset_email.txt", context
-                    )
-                    html_content = render_to_string(
-                        "emails/password_reset_email.html", context
-                    )
-
                     from_email = getattr(
-                        settings, "DEFAULT_FROM_EMAIL", "webmaster@localhost"
+                        settings, "DEFAULT_FROM_EMAIL", "noreply@example.com"
                     )
-                    msg = EmailMultiAlternatives(
-                        subject, text_content, from_email, [user.email]
-                    )
-                    msg.attach_alternative(html_content, "text/html")
 
                     try:
-                        msg.send()
-                        logger.info(
-                            "AUDIT: Password reset email sent for user ID: %s",
-                            user.pk,
+                        text_content = render_to_string(
+                            "emails/password_reset_email.txt", context
                         )
-                    except Exception:
-                        logger.exception(
-                            "AUDIT: Failed to send password reset email for user ID: %s",
-                            user.pk,
+                        html_content = render_to_string(
+                            "emails/password_reset_email.html", context
                         )
-                except Exception:
 
+                        msg = EmailMultiAlternatives(
+                            subject, text_content, from_email, [user.email]
+                        )
+                        msg.attach_alternative(html_content, "text/html")
+                        msg.send()
+                    except TemplateDoesNotExist:
+                        send_mail(
+                            subject=subject,
+                            message=f"Password reset link: {reset_url}",
+                            from_email=from_email,
+                            recipient_list=[user.email],
+                        )
+
+                    logger.info(
+                        "AUDIT: Password reset email sent for user ID: %s",
+                        user.pk,
+                    )
+                except Exception:
                     logger.exception(
-                        "AUDIT: Unexpected error processing password reset for user ID: %s",
+                        "AUDIT: Failed to process password reset email for user ID: %s",
                         user.pk,
                     )
             else:
-
                 logger.info(
                     "AUDIT: Password reset requested for a non-existent or inactive account."
                 )
@@ -104,10 +144,15 @@ class PasswordResetRequestView(APIView):
 
 
 class PasswordResetConfirmView(APIView):
-    permission_classes = [AllowAny]
-    throttle_classes = [PasswordResetThrottle]
+    """
+    POST /api/auth/password-reset/confirm/
+    Endpoint to validate reset token, apply password complexity rules, and update user password.
+    """
 
-    def post(self, request):
+    permission_classes = [AllowAny]
+    throttle_classes = [PasswordResetConfirmThrottle]
+
+    def post(self, request, *args, **kwargs):
         serializer = PasswordResetConfirmSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.validated_data["user"]
