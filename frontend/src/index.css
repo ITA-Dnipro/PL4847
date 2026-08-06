@@ -8,12 +8,21 @@
   --accent-bg: rgba(170, 59, 255, 0.1);
   --accent-border: rgba(170, 59, 255, 0.5);
   --social-bg: rgba(244, 243, 236, 0.5);
+  --cta-bg: #b4d27a;
+  --cta-text: #000000;
+  --cta-btn-bg: #17181c;
+  --cta-btn-text: #ffffff;
+  --fw-bg: #F9F5EC;
+  --fw-text: #232424;
+  --fw-accent: #d8722f;
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
+  --margin-top-bottom: 80px;
+  --margin-left-right: 104px;
 
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
@@ -50,16 +59,16 @@
   }
 }
 
-body {
+body, button {
   margin: 0;
+  font-family: 'Geologica', sans-serif;
 }
 
 #root {
-  width: 1126px;
+  width: 100%;
   max-width: 100%;
   margin: 0 auto;
   text-align: center;
-  border-inline: 1px solid var(--border);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
