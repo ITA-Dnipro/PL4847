@@ -61,12 +61,11 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.UserRateThrottle",
     ],
     "DEFAULT_THROTTLE_RATES": {
-        "anon": "100/day",    
-        "user": "1000/day",    
-        "resend": "1/min",     
+        "anon": "100/day",
+        "user": "1000/day",
+        "resend": "1/min",
     },
 }
-
 ROOT_URLCONF = "project.urls"
 
 TEMPLATES = [
@@ -127,6 +126,7 @@ EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
 EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=False)
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="no-reply@example.com")
+EMAIL_TIMEOUT = env.int("EMAIL_TIMEOUT", default=10)
 
 FRONTEND_URL = env("FRONTEND_URL", default="http://localhost:3000")
 EMAIL_VERIFICATION_PATH = env("EMAIL_VERIFICATION_PATH", default="/verify-email")

@@ -1,11 +1,21 @@
 import pytest
+from authentication.tokens import generate_verification_token, verify_verification_token
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from authentication.tokens import generate_verification_token, verify_verification_token
-
 User = get_user_model()
+
+
+@pytest.fixture(autouse=True)
+def disable_throttling_for_tests(settings):
+    settings.REST_FRAMEWORK = {
+        **getattr(settings, "REST_FRAMEWORK", {}),
+        "DEFAULT_THROTTLE_CLASSES": [],
+        "DEFAULT_THROTTLE_RATES": {},
+    }
+    cache.clear()
 
 
 @pytest.mark.django_db
@@ -52,8 +62,6 @@ def test_verify_email_rejects_expired_token():
     )
     token = generate_verification_token(user)
 
-    # Directly exercise the token validator with a max_age of 0 seconds,
-    # which is equivalent to the token already being expired.
     assert verify_verification_token(token, max_age=0) is None
 
 
@@ -68,7 +76,7 @@ def test_resend_verification_returns_200_for_unknown_email():
     assert response.status_code == status.HTTP_200_OK
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 def test_resend_verification_sends_mail_for_inactive_user(mailoutbox):
     User.objects.create_user(
         username="resend-user",
