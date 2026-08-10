@@ -88,12 +88,15 @@ class LandingContentView(APIView):
             ],
             "footer_links": {
                 "left": [
-                    {"name": "About Us", "url": "/about"},
-                    {"name": "Privacy Policy", "url": "/privacy"},
+                    {"name": "Компанії", "url": "/companies"},
+                    {"name": "Стартапи", "url": "/startups"},
                 ],
                 "right": [
-                    {"name": "Contact", "url": "/contact"},
-                    {"name": "FAQ", "url": "/faq"},
+                    {"name": "Виробники", "url": "/manufacturers"},
+                    {"name": "Імпортери", "url": "/importers"},
+                    {"name": "Роздрібні мережі", "url": "/retail-chains"},
+                    {"name": "HORECA", "url": "/horeca"},
+                    {"name": "Інші послуги", "url": "/other-services"},
                 ],
             },
         }

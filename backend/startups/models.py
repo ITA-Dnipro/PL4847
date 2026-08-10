@@ -115,3 +115,28 @@ class StartupProfile(models.Model):
 
     def __str__(self) -> str:
         return self.company_name
+    
+    
+class Subscription(models.Model):
+    startup = models.ForeignKey(
+        "StartupProfile",
+        on_delete=models.CASCADE,
+        related_name="subscriptions",
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="startup_subscriptions",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["startup", "user"],
+                name="unique_subscription_per_user",
+            ),
+        ]
+
+    def __str__(self):
+        return f"{self.user} -> {self.startup}"
