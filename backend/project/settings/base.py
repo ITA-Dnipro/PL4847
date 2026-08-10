@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "dashboard",
     "rest_framework_simplejwt.token_blacklist",
     "content",
+    "authentication",
 ]
 
 MIDDLEWARE = [
@@ -55,8 +56,16 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "100/day",
+        "user": "1000/day",
+        "resend": "1/min",
+    },
 }
-
 ROOT_URLCONF = "project.urls"
 
 TEMPLATES = [
@@ -107,3 +116,20 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
 AUTH_USER_MODEL = "users.User"
+
+EMAIL_BACKEND = env(
+    "EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend"
+)
+EMAIL_HOST = env("EMAIL_HOST", default="localhost")
+EMAIL_PORT = env.int("EMAIL_PORT", default=25)
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=False)
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="no-reply@example.com")
+EMAIL_TIMEOUT = env.int("EMAIL_TIMEOUT", default=10)
+
+FRONTEND_URL = env("FRONTEND_URL", default="http://localhost:3000")
+EMAIL_VERIFICATION_PATH = env("EMAIL_VERIFICATION_PATH", default="/verify-email")
+EMAIL_VERIFICATION_TOKEN_MAX_AGE = env.int(
+    "EMAIL_VERIFICATION_TOKEN_MAX_AGE", default=60 * 60 * 24  # 24h
+)
