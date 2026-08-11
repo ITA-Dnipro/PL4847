@@ -1,0 +1,208 @@
+.footer {
+  background: var(--cta-btn-bg, #17181c);
+  color: #FFFFFF;
+  font-size: 14px;
+  padding: 40px var(--margin-left-right, 104px);
+  box-sizing: border-box;
+}
+
+.footer a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer a:hover,
+.footer a:focus-visible {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.footer a:focus-visible,
+.footer button:focus-visible {
+  outline: 2px solid #7f8fff;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.footer__inner {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(320px, 2fr) minmax(220px, 1fr);
+  gap: 40px;
+  align-items: start;
+}
+
+.footer__brand-col {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  text-align: left;
+}
+
+.footer__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  margin-bottom: 0;
+}
+
+.footer__logo svg {
+  flex: none;
+  color: #fff;
+  width: 31px;
+  height: 30px;
+}
+
+.footer__logo span {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 100%;
+}
+
+.footer__brand-col address {
+  font-style: normal;
+  margin-bottom: 0;
+  text-align: left;
+}
+
+.footer__brand-col address p {
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: -0.01em;
+}
+
+.footer__brand-col address p:first-child {
+  font-weight: 400;
+  margin: 0 0 4px;
+}
+
+.footer__brand-col address p:last-child {
+  font-weight: 400;
+  margin: 0;
+}
+
+.footer__contacts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.footer__contacts a {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Geologica', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: -0.01em;
+}
+
+.footer__contacts svg {
+  flex: none;
+  color: #9a9aa2;
+  width: 24px;
+  height: 24px;
+}
+
+.footer__nav-col {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  margin-top: 64px;
+  text-align: left;
+}
+
+.footer__group h3 {
+  color: #fff;
+  font-family: 'Geologica', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: -0.01em;
+  margin: 0 0 14px; 
+  text-align: left;
+}
+
+.footer__group ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  text-align: left;
+}
+
+.footer__group ul a {
+  font-family: 'Geologica', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: -0.01em;
+}
+
+.footer__meta-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; 
+  gap: 31px;
+  text-align: left; 
+}
+
+.footer__credit {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; 
+  gap: 6px;
+  margin: 0;
+}
+
+.footer__credit-label {
+  font-family: 'Proxima Nova', sans-serif;
+  font-weight: 500;
+  font-size: 8px;
+  line-height: 100%;
+  letter-spacing: 0;
+}
+
+.footer__credit-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  font-size: 13px;
+}
+
+.footer__credit-logo svg {
+  color: #fff;
+}
+
+.footer__legal {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.footer__legal a {
+  font-weight: 400;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+  color: #959595;
+}
+
+.footer__copyright {
+  margin: 0;
+  font-weight: 300;
+  font-style: normal;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+  text-align: right;
+}
