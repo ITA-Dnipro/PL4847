@@ -175,12 +175,12 @@ class PasswordResetConfirmView(APIView):
             for outstanding_token in OutstandingToken.objects.filter(user=user):
                 BlacklistedToken.objects.get_or_create(token=outstanding_token)
             
-            # user_ip_address = request.META.get()
-            
-            
+            user_ip_address = request.META.get("REMOTE_ADDR")
+            user_agent = request.META.get("HTTP_USER_AGENT")
+                   
             logger.info(
-                "AUDIT: Password reset successfully completed for user ID: %s",
-                user.pk,
+                "AUDIT: Password reset successfully completed for user ID: %s, IP: %s, UA: %s",
+                user.pk, user_ip_address, user_agent
             )
             return Response(
                 {"detail": "Password changed successfully."},
