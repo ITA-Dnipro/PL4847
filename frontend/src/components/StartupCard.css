@@ -1,4 +1,5 @@
 .startup-card {
+    position: relative;
     display: flex;
     flex-direction: column;
     text-align: left;

@@ -12,7 +12,7 @@ function getCsrfToken() {
   return match ? decodeURIComponent(match[1]) : '';
 }
 
-export async function subscribeEmail(email) {
+export async function subscribeToStartup(startupId) {
   const res = await fetch(SUBSCRIBE_ENDPOINT, {
     method: 'POST',
     headers: {
@@ -20,14 +20,14 @@ export async function subscribeEmail(email) {
       'X-CSRFToken': getCsrfToken(),
     },
     credentials: 'same-origin',
-    body: JSON.stringify({ email }),
+    body: JSON.stringify({ startup_id: startupId }),
   });
 
   if (res.ok) {
-    return { ok: true, message: 'Дякуємо! Ви підписані на новини.' };
+    return { ok: true, message: 'Дякуємо! Ви успішно підписалися на стартап.' };
   }
 
   const data = await res.json().catch(() => null);
-  const message = data?.email?.[0] || data?.detail || 'Не вдалося оформити підписку. Спробуйте ще раз.';
+  const message = data?.startup_id?.[0] || data?.detail || 'Не вдалося оформити підписку. Спробуйте ще раз.';
   return { ok: false, message };
 }

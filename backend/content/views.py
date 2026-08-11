@@ -92,8 +92,6 @@ class LandingContentView(APIView):
                     {"name": "Стартапи", "url": "/startups"},
                 ],
                 "right": [
-                    {"name": "Contact", "url": "/contact"},
-                    {"name": "FAQ", "url": "/faq"},
                     {"name": "Виробники", "url": "/manufacturers"},
                     {"name": "Імпортери", "url": "/importers"},
                     {"name": "Роздрібні мережі", "url": "/retail-chains"},

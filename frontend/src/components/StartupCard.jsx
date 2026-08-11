@@ -7,6 +7,11 @@ const API_PREFIX = API_BASE ?? "";
 const SUBSCRIBE_URL = `${API_PREFIX}/api/subscribe/`;
 const TOAST_DURATION_MS = 3000;
 
+function getCsrfToken() {
+    const match = document.cookie.match(/(?:^|;\s*)csrftoken=([^;]+)/);
+    return match ? decodeURIComponent(match[1]) : '';
+}
+
 function StartupCard({ startup }) {
 
     const [subscribed, setSubscribed] = useState(false);
@@ -36,11 +41,28 @@ function StartupCard({ startup }) {
 
         setSubscribing(true);
         try {
+            const token = localStorage.getItem('access') || localStorage.getItem('token');
+            const headers = {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCsrfToken(),
+            };
+            if (token) {
+                headers["Authorization"] = `Bearer ${token}`;
+            }
+
             const response = await fetch(SUBSCRIBE_URL, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers,
+                credentials: "same-origin",
                 body: JSON.stringify({ startup_id: startup.id }),
             });
+
+            if (response.status === 401 || response.status === 403) {
+                showToast("error", "Будь ласка, увійдіть у систему для підписки.");
+                // Припускаємо, що у вас є роутинг на /login або функція переходу
+                window.location.href = "/login"; 
+                return;
+            }
 
             if (!response.ok) throw new Error("Subscribe request failed");
 

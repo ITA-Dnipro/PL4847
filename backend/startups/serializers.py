@@ -28,7 +28,10 @@ class StartupListSerializer(serializers.ModelSerializer):
 
 class SubscriptionCreateSerializer(serializers.ModelSerializer):
     startup_id = serializers.PrimaryKeyRelatedField(
-        source="startup", queryset=StartupProfile.objects.all()
+        source="startup", 
+         queryset=StartupProfile.objects.filter(
+             status=StartupProfile.Status.PUBLISHED,
+        ),
     )
 
     class Meta:
