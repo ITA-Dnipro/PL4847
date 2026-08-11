@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-from django.shortcuts import render
-from django.contrib.auth import get_user_model
-from rest_framework import status
-from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.throttling import ScopedRateThrottle
-=======
 import logging
 
 from django.contrib.auth import get_user_model
@@ -17,16 +8,12 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.views import APIView
->>>>>>> 256fc30d6dce87d032c70a51314edeae2577dec4
 
 from .emails import send_verification_email
 from .tokens import verify_verification_token
 
-<<<<<<< HEAD
-=======
 logger = logging.getLogger(__name__)
 
->>>>>>> 256fc30d6dce87d032c70a51314edeae2577dec4
 User = get_user_model()
 
 
