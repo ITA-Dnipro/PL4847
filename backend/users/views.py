@@ -14,6 +14,7 @@ from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, BlacklistedToken
 
 from .serializers import PasswordResetConfirmSerializer, PasswordResetRequestSerializer
 
@@ -83,13 +84,12 @@ class PasswordResetRequestView(APIView):
                         .rstrip("=")
                     )
                     token = default_token_generator.make_token(user)
-                    combined_token = f"{uidb64}:{token}"
 
                     frontend_url = getattr(
                         settings, "FRONTEND_URL", "http://localhost:3000"
                     )
                     reset_url = (
-                        f"{frontend_url}/password-reset/confirm?token={combined_token}"
+                        f"{frontend_url}/password-reset/confirm?uid={uidb64}&token={token}"
                     )
 
                     context = {"user": user, "reset_url": reset_url}
@@ -152,22 +152,37 @@ class PasswordResetConfirmView(APIView):
     permission_classes = [AllowAny]
     throttle_classes = [PasswordResetConfirmThrottle]
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         serializer = PasswordResetConfirmSerializer(data=request.data)
-        if serializer.is_valid():
+        if not serializer.is_valid():
+            errors = serializer.errors
+            if "password" in errors:
+                return Response(
+                    {"password": errors["password"]},
+                    status=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                )
+            return Response(
+                {"detail": "Invalid or expired token."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        else:
             user = serializer.validated_data["user"]
             password = serializer.validated_data["password"]
 
             user.set_password(password)
             user.save()
 
+            for outstanding_token in OutstandingToken.objects.filter(user=user):
+                BlacklistedToken.objects.get_or_create(token=outstanding_token)
+            
+            # user_ip_address = request.META.get()
+            
+            
             logger.info(
                 "AUDIT: Password reset successfully completed for user ID: %s",
                 user.pk,
             )
             return Response(
-                {"message": "Password has been reset successfully."},
+                {"detail": "Password changed successfully."},
                 status=status.HTTP_200_OK,
             )
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
