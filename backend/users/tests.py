@@ -4,13 +4,12 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
 from django.test import TestCase
+from django.urls import reverse
 from investors.models import InvestorProfile, SavedStartup
 from projects.models import Project
-from startups.models import StartupProfile
-from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from startups.models import Tag
+from startups.models import StartupProfile, Tag
 
 User = get_user_model()
 
