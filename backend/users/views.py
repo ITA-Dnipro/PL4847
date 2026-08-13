@@ -14,8 +14,11 @@ from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.http import Http404
+from rest_framework import generics
+from .permissions import IsOwnerOrReadOnly
 
-from .serializers import PasswordResetConfirmSerializer, PasswordResetRequestSerializer
+from .serializers import PasswordResetConfirmSerializer, PasswordResetRequestSerializer, ProfileSerializer
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -171,3 +174,20 @@ class PasswordResetConfirmView(APIView):
             )
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ProfileDetailView(generics.RetrieveUpdateAPIView):
+    queryset = User.objects.prefetch_related("tags")
+    serializer_class = ProfileSerializer
+    permission_classes = [IsOwnerOrReadOnly]
+    lookup_field = "id"
+
+    def get_object(self):
+        obj = super().get_object()
+        is_owner = (
+            self.request.user.is_authenticated
+            and obj.id == self.request.user.id
+        )
+        if not obj.is_active_profile and not is_owner:
+            raise Http404
+        return obj

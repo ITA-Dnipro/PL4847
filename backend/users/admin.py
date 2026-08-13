@@ -7,6 +7,7 @@ from startups.models import StartupProfile
 from .models import User
 
 
+
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
     list_display = (
@@ -38,6 +39,21 @@ class CustomUserAdmin(UserAdmin):
                     "role",
                     "created_at",
                     "updated_at",
+                ),
+            },
+        ),
+        (
+            "Profile",
+            {
+                "fields": (
+                    "name",
+                    "slug",
+                    "about_html",
+                    "short_description",
+                    "contact_email",
+                    "website",
+                    "tags",
+                    "stats",
                 ),
             },
         ),
