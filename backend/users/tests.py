@@ -172,6 +172,7 @@ class InitialModelsTests(TestCase):
                 company_name="Invalid Investor",
             )
 
+
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
@@ -206,7 +207,6 @@ class ProfileAPITests(APITestCase):
 
     def url(self, user):
         return reverse("users:profile-detail", kwargs={"id": user.id})
-
 
     def test_get_public_profile_returns_expected_payload(self):
         response = self.client.get(self.url(self.owner))
@@ -244,7 +244,6 @@ class ProfileAPITests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["visibility"], "hidden")
 
-
     def test_owner_can_patch_profile(self):
         self.client.force_authenticate(user=self.owner)
         response = self.client.patch(
@@ -254,7 +253,7 @@ class ProfileAPITests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["short_description"], "Updated")
         self.owner.refresh_from_db()
-        self.assertEqual(self.owner.name, "Owner Co")  
+        self.assertEqual(self.owner.name, "Owner Co")
         self.assertIsNotNone(self.owner.updated_at)
 
     def test_patch_deactivate_sets_updated_at_null(self):
@@ -265,7 +264,6 @@ class ProfileAPITests(APITestCase):
         self.assertEqual(response.data["visibility"], "hidden")
         self.owner.refresh_from_db()
         self.assertIsNone(self.owner.updated_at)
-
 
     def test_put_missing_required_field_returns_400(self):
         self.client.force_authenticate(user=self.owner)
@@ -328,7 +326,6 @@ class ProfileAPITests(APITestCase):
             format="json",
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
 
     def test_unauthenticated_patch_returns_401(self):
         response = self.client.patch(

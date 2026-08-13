@@ -5,20 +5,23 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMultiAlternatives, send_mail
+from django.http import Http404
 from django.template.exceptions import TemplateDoesNotExist
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
-from rest_framework import status
+from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.http import Http404
-from rest_framework import generics
-from .permissions import IsOwnerOrReadOnly
 
-from .serializers import PasswordResetConfirmSerializer, PasswordResetRequestSerializer, ProfileSerializer
+from .permissions import IsOwnerOrReadOnly
+from .serializers import (
+    PasswordResetConfirmSerializer,
+    PasswordResetRequestSerializer,
+    ProfileSerializer,
+)
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -184,10 +187,7 @@ class ProfileDetailView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         obj = super().get_object()
-        is_owner = (
-            self.request.user.is_authenticated
-            and obj.id == self.request.user.id
-        )
+        is_owner = self.request.user.is_authenticated and obj.id == self.request.user.id
         if not obj.is_active_profile and not is_owner:
             raise Http404
         return obj

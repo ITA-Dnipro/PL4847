@@ -66,7 +66,6 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         return user
 
 
-
 class ProfileStatsField(serializers.DictField):
     child = serializers.FloatField(min_value=0)
 
@@ -82,7 +81,6 @@ class ProfileStatsField(serializers.DictField):
         return super().to_internal_value(data)
 
 
-    
 class ProfileSerializer(serializers.ModelSerializer):
     name = serializers.CharField(max_length=255)
     contact = serializers.EmailField(
@@ -94,13 +92,9 @@ class ProfileSerializer(serializers.ModelSerializer):
         required=False,
         queryset=Tag.objects.all(),
     )
-    stats = ProfileStatsField(
-        required=False)
-    visibility = serializers.SerializerMethodField(
-        read_only=True)
-    is_active = serializers.BooleanField(
-        write_only=True, required=False)
-
+    stats = ProfileStatsField(required=False)
+    visibility = serializers.SerializerMethodField(read_only=True)
+    is_active = serializers.BooleanField(write_only=True, required=False)
 
     class Meta:
         model = User
@@ -127,7 +121,6 @@ class ProfileSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Name cannot be blank.")
         return value
 
-
     def update(self, instance, validated_data):
         activate = validated_data.pop("is_active", None)
         tags = validated_data.pop("tags", None)
@@ -140,7 +133,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         else:
             instance.deactivate()
 
-        instance.save()  
+        instance.save()
 
         if tags is not None:
             instance.tags.set(tags)

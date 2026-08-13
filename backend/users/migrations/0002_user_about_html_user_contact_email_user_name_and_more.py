@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("startups", "0004_subscription"),
+        ("startups", "0003_location_tag_startupprofile_thumbnail_url_and_more"),
         ("users", "0001_initial"),
     ]
 

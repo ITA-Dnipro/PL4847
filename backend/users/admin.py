@@ -7,7 +7,6 @@ from startups.models import StartupProfile
 from .models import User
 
 
-
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
     list_display = (

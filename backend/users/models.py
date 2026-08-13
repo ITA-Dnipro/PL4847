@@ -1,7 +1,8 @@
 import uuid
-from django.utils import timezone
+
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
+from django.utils import timezone
 
 
 class User(AbstractUser):
@@ -31,31 +32,18 @@ class User(AbstractUser):
         null=True,
         blank=True,
     )
-    name = models.CharField(
-        max_length=255, 
-        blank=True)
-    slug = models.SlugField(
-        max_length=255, 
-        unique=True, 
-        null=True, 
-        blank=True)
-    about_html = models.TextField(
-        blank=True)
-    short_description = models.CharField(
-        max_length=500, 
-        blank=True)
-    contact_email = models.EmailField(
-        blank=True)
-    website = models.URLField(
-        max_length=500)
+    name = models.CharField(max_length=255, blank=True)
+    slug = models.SlugField(max_length=255, unique=True, null=True, blank=True)
+    about_html = models.TextField(blank=True)
+    short_description = models.CharField(max_length=500, blank=True)
+    contact_email = models.EmailField(blank=True)
+    website = models.URLField(max_length=500)
     tags = models.ManyToManyField(
         "startups.Tag",
         related_name="user_profiles",
         blank=True,
     )
-    stats = models.JSONField(
-        default=dict, 
-        blank=True)
+    stats = models.JSONField(default=dict, blank=True)
 
     @property
     def is_active_profile(self) -> bool:
@@ -78,7 +66,7 @@ class User(AbstractUser):
             self.Role.INVESTOR,
             self.Role.BOTH,
         }
-    
+
     def save(self, *args, **kwargs) -> None:
         if self._state.adding and self.updated_at is None:
             self.touch()
@@ -86,4 +74,3 @@ class User(AbstractUser):
 
     def __str__(self) -> str:
         return self.email
-
