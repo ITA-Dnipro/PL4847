@@ -7,6 +7,10 @@ from django.test import TestCase
 from investors.models import InvestorProfile, SavedStartup
 from projects.models import Project
 from startups.models import StartupProfile
+from django.urls import reverse
+from rest_framework import status
+from rest_framework.test import APITestCase
+from startups.models import Tag
 
 User = get_user_model()
 
@@ -171,15 +175,6 @@ class InitialModelsTests(TestCase):
                 user=self.startup_user,
                 company_name="Invalid Investor",
             )
-
-
-from django.contrib.auth import get_user_model
-from django.urls import reverse
-from rest_framework import status
-from rest_framework.test import APITestCase
-from startups.models import Tag
-
-User = get_user_model()
 
 
 class ProfileAPITests(APITestCase):
