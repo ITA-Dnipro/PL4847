@@ -15,6 +15,8 @@ from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.shortcuts import get_object_or_404
+
 
 from .permissions import IsOwnerOrReadOnly
 from .serializers import (
@@ -186,8 +188,17 @@ class ProfileDetailView(generics.RetrieveUpdateAPIView):
     lookup_field = "id"
 
     def get_object(self):
-        obj = super().get_object()
-        is_owner = self.request.user.is_authenticated and obj.id == self.request.user.id
+        queryset = self.filter_queryset(self.get_queryset())
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+        filter_kwargs = {self.lookup_field: self.kwargs[lookup_url_kwarg]}
+        obj = get_object_or_404(queryset, **filter_kwargs)
+
+        is_owner = (
+            self.request.user.is_authenticated
+            and obj.id == self.request.user.id
+        )
         if not obj.is_active_profile and not is_owner:
             raise Http404
+
+        self.check_object_permissions(self.request, obj)
         return obj
