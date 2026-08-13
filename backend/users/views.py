@@ -14,8 +14,13 @@ from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .serializers import PasswordResetConfirmSerializer, PasswordResetRequestSerializer
+from .serializers import (
+    LoginSerializer,
+    PasswordResetConfirmSerializer,
+    PasswordResetRequestSerializer,
+)
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -31,6 +36,25 @@ class PasswordResetRequestThrottle(AnonRateThrottle):
 
 class PasswordResetConfirmThrottle(AnonRateThrottle):
     rate = "5/min"
+
+
+class LoginThrottle(AnonRateThrottle):
+    """Throttle for brute-force protection on login attempts (5 requests/min)."""
+
+    rate = "5/min"
+
+
+class LoginView(TokenObtainPairView):
+    """
+    POST /api/auth/login/
+    Accepts email + password (+ optional remember flag) and returns
+    JWT access & refresh tokens along with user payload.
+    Includes rate-limiting for brute-force protection.
+    """
+
+    permission_classes = (AllowAny,)
+    serializer_class = LoginSerializer
+    throttle_classes = [LoginThrottle]
 
 
 class LogoutView(APIView):
@@ -65,7 +89,7 @@ class PasswordResetRequestView(APIView):
     Endpoint to request a password reset email.
     """
 
-    permission_classes = [AllowAny]
+    permission_classes = (AllowAny,)
     throttle_classes = [PasswordResetRequestThrottle]
 
     def post(self, request, *args, **kwargs):
@@ -149,7 +173,7 @@ class PasswordResetConfirmView(APIView):
     Endpoint to validate reset token, apply password complexity rules, and update user password.
     """
 
-    permission_classes = [AllowAny]
+    permission_classes = (AllowAny,)
     throttle_classes = [PasswordResetConfirmThrottle]
 
     def post(self, request, *args, **kwargs):

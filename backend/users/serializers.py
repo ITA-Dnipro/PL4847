@@ -7,9 +7,48 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from rest_framework import serializers
+from rest_framework.exceptions import AuthenticationFailed
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
+
+
+class LoginSerializer(TokenObtainPairSerializer):
+    """
+    Serializer for POST /api/auth/login/.
+    Accepts email + password (+ optional remember flag) and returns
+    JWT access & refresh tokens along with user payload.
+    """
+
+    username_field = "email"
+    remember = serializers.BooleanField(required=False, default=False)
+
+    def validate(self, attrs):
+        email = attrs.get("email")
+        password = attrs.get("password")
+
+        user = User.objects.filter(email__iexact=email).first()
+
+        if not user or not user.check_password(password) or not user.is_active:
+
+            raise AuthenticationFailed("Invalid credentials", code="bad_credentials")
+
+        self.user = user
+
+        refresh = self.get_token(self.user)
+        data = {
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+        }
+
+        user_role = getattr(self.user, "role", "startup")
+        data["user"] = {
+            "id": self.user.id,
+            "email": self.user.email,
+            "role": user_role,
+        }
+        return data
 
 
 class PasswordResetRequestSerializer(serializers.Serializer):
