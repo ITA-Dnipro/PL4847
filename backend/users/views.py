@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMultiAlternatives, send_mail
+from django.db import transaction
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.template.exceptions import TemplateDoesNotExist
@@ -99,7 +100,7 @@ class PasswordResetRequestView(APIView):
                     token = default_token_generator.make_token(user)
 
                     frontend_url = getattr(
-                        settings, "FRONTEND_URL", "http://localhost:3000"
+                        settings, "FRONTEND_URL", "http://localhost:5173"
                     )
                     reset_url = f"{frontend_url}/password-reset/confirm?uid={uidb64}&token={token}"
 
@@ -180,11 +181,12 @@ class PasswordResetConfirmView(APIView):
             user = serializer.validated_data["user"]
             password = serializer.validated_data["password"]
 
-            user.set_password(password)
-            user.save()
+            with transaction.atomic():
+                user.set_password(password)
+                user.save()
 
-            for outstanding_token in OutstandingToken.objects.filter(user=user):
-                BlacklistedToken.objects.get_or_create(token=outstanding_token)
+                for outstanding_token in OutstandingToken.objects.filter(user=user):
+                    BlacklistedToken.objects.get_or_create(token=outstanding_token)
 
             user_ip_address = request.META.get("REMOTE_ADDR")
             user_agent = request.META.get("HTTP_USER_AGENT")
@@ -199,8 +201,6 @@ class PasswordResetConfirmView(APIView):
                 {"detail": "Password changed successfully."},
                 status=status.HTTP_200_OK,
             )
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ProfileDetailView(generics.RetrieveUpdateAPIView):
