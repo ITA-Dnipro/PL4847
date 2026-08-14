@@ -21,7 +21,7 @@ class PasswordResetRequestSerializer(serializers.Serializer):
 
 class PasswordResetConfirmSerializer(serializers.Serializer):
     """Serializer for confirming and setting a new password via reset token."""
-    
+
     uid = serializers.CharField(required=True)
     token = serializers.CharField(required=True)
     password = serializers.CharField(
@@ -32,7 +32,6 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         uidb64 = data.get("uid")
         token = data.get("token")
         password = data.get("password")
-
 
         try:
             uid = force_str(urlsafe_base64_decode(uidb64))
@@ -52,7 +51,6 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 
         data["user"] = user
         return data
-
 
 
 class ProfileStatsField(serializers.DictField):

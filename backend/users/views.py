@@ -15,8 +15,11 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework.views import APIView
+from rest_framework_simplejwt.token_blacklist.models import (
+    BlacklistedToken,
+    OutstandingToken,
+)
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, BlacklistedToken
 
 from .permissions import IsOwnerOrReadOnly
 from .serializers import (
@@ -98,9 +101,7 @@ class PasswordResetRequestView(APIView):
                     frontend_url = getattr(
                         settings, "FRONTEND_URL", "http://localhost:3000"
                     )
-                    reset_url = (
-                        f"{frontend_url}/password-reset/confirm?uid={uidb64}&token={token}"
-                    )
+                    reset_url = f"{frontend_url}/password-reset/confirm?uid={uidb64}&token={token}"
 
                     context = {"user": user, "reset_url": reset_url}
                     subject = "Скидання пароля"
@@ -184,13 +185,15 @@ class PasswordResetConfirmView(APIView):
 
             for outstanding_token in OutstandingToken.objects.filter(user=user):
                 BlacklistedToken.objects.get_or_create(token=outstanding_token)
-            
+
             user_ip_address = request.META.get("REMOTE_ADDR")
             user_agent = request.META.get("HTTP_USER_AGENT")
-                   
+
             logger.info(
                 "AUDIT: Password reset successfully completed for user ID: %s, IP: %s, UA: %s",
-                user.pk, user_ip_address, user_agent
+                user.pk,
+                user_ip_address,
+                user_agent,
             )
             return Response(
                 {"detail": "Password changed successfully."},

@@ -85,45 +85,42 @@ class TestPasswordReset:
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert "detail" in response.data
 
-
     def test_confirm_reset_weak_password_returns_422(self, api_client, test_user):
         uidb64 = (
-                    base64.urlsafe_b64encode(force_bytes(test_user.pk)).decode().rstrip("=")
+            base64.urlsafe_b64encode(force_bytes(test_user.pk)).decode().rstrip("=")
         )
         token = default_token_generator.make_token(test_user)
-        
+
         url = reverse("users:password-reset-confirm")
-        data = {
-            "uid": uidb64,
-            "token": token,
-            "password": "pass"
-        }
-        
+        data = {"uid": uidb64, "token": token, "password": "pass"}
+
         response = api_client.post(url, data)
-        
+
         assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
         assert "password" in response.data
         test_user.refresh_from_db()
         assert test_user.check_password("OldPassword123!")
-        
-    def test_confirm_reset_expired_token_returns_400(self, api_client, test_user, settings):
+
+    def test_confirm_reset_expired_token_returns_400(
+        self, api_client, test_user, settings
+    ):
         uidb64 = (
-                            base64.urlsafe_b64encode(force_bytes(test_user.pk)).decode().rstrip("=")
+            base64.urlsafe_b64encode(force_bytes(test_user.pk)).decode().rstrip("=")
         )
         token = default_token_generator.make_token(test_user)
-        
+
         settings.PASSWORD_RESET_TIMEOUT = -1
-        
+
         url = reverse("users:password-reset-confirm")
         data = {
             "uid": uidb64,
             "token": token,
             "password": "NewStr0ngP@ssword2026",
         }
-        
+
         response = api_client.post(url, data)
-        
+
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert "detail" in response.data
         test_user.refresh_from_db()
-        assert test_user.check_password("OldPassword123!")        
+        assert test_user.check_password("OldPassword123!")
