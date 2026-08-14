@@ -1,9 +1,12 @@
+from rest_framework import status
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .models import StartupProfile
-from .serializers import StartupListSerializer
+from .serializers import StartupListSerializer, SubscriptionCreateSerializer
 
 
 class StartupPagination(PageNumberPagination):
@@ -35,3 +38,15 @@ class StartupListView(ListAPIView):
             queryset = queryset.filter(company_name__icontains=search)
 
         return queryset.distinct()
+
+
+class SubscribeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = SubscriptionCreateSerializer(
+            data=request.data, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"detail": "Subscribed."}, status=status.HTTP_201_CREATED)

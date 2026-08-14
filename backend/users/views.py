@@ -5,10 +5,12 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMultiAlternatives, send_mail
+from django.http import Http404
+from django.shortcuts import get_object_or_404
 from django.template.exceptions import TemplateDoesNotExist
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
-from rest_framework import status
+from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
@@ -16,7 +18,12 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, BlacklistedToken
 
-from .serializers import PasswordResetConfirmSerializer, PasswordResetRequestSerializer
+from .permissions import IsOwnerOrReadOnly
+from .serializers import (
+    PasswordResetConfirmSerializer,
+    PasswordResetRequestSerializer,
+    ProfileSerializer,
+)
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -186,3 +193,25 @@ class PasswordResetConfirmView(APIView):
                 {"detail": "Password changed successfully."},
                 status=status.HTTP_200_OK,
             )
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ProfileDetailView(generics.RetrieveUpdateAPIView):
+    queryset = User.objects.prefetch_related("tags")
+    serializer_class = ProfileSerializer
+    permission_classes = [IsOwnerOrReadOnly]
+    lookup_field = "id"
+
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
+        filter_kwargs = {self.lookup_field: self.kwargs[lookup_url_kwarg]}
+        obj = get_object_or_404(queryset, **filter_kwargs)
+
+        is_owner = self.request.user.is_authenticated and obj.id == self.request.user.id
+        if not obj.is_active_profile and not is_owner:
+            raise Http404
+
+        self.check_object_permissions(self.request, obj)
+        return obj
