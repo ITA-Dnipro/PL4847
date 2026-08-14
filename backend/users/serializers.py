@@ -53,15 +53,6 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         data["user"] = user
         return data
 
-    def save(self, **kwargs):
-        user = self.validated_data["user"]
-        password = self.validated_data["password"]
-
-        user.set_password(password)
-        user.save()
-
-        logger.info("AUDIT: Password successfully reset for user ID: %s", user.pk)
-        return user
 
 
 class ProfileStatsField(serializers.DictField):

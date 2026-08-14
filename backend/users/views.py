@@ -30,14 +30,17 @@ User = get_user_model()
 
 
 class PasswordResetThrottle(AnonRateThrottle):
+    scope = "password_reset"
     rate = "5/min"
 
 
 class PasswordResetRequestThrottle(AnonRateThrottle):
+    scope = "password_reset_request"
     rate = "5/min"
 
 
 class PasswordResetConfirmThrottle(AnonRateThrottle):
+    scope = "password_reset_confirm"
     rate = "5/min"
 
 
