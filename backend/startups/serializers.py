@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import StartupProfile
+from .models import StartupProfile, Subscription
 
 
 class StartupListSerializer(serializers.ModelSerializer):
@@ -24,3 +24,25 @@ class StartupListSerializer(serializers.ModelSerializer):
             "location",
             "tags",
         ]
+
+
+class SubscriptionCreateSerializer(serializers.ModelSerializer):
+    startup_id = serializers.PrimaryKeyRelatedField(
+        source="startup",
+        queryset=StartupProfile.objects.filter(
+            status=StartupProfile.Status.PUBLISHED,
+        ),
+    )
+
+    class Meta:
+        model = Subscription
+        fields = ["startup_id"]
+
+    def create(self, validated_data):
+        user = self.context["request"].user
+
+        subscription, _ = Subscription.objects.get_or_create(
+            startup=validated_data["startup"],
+            user=user,
+        )
+        return subscription
