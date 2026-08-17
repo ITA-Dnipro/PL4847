@@ -41,6 +41,21 @@ class CustomUserAdmin(UserAdmin):
                 ),
             },
         ),
+        (
+            "Profile",
+            {
+                "fields": (
+                    "name",
+                    "slug",
+                    "about_html",
+                    "short_description",
+                    "contact_email",
+                    "website",
+                    "tags",
+                    "stats",
+                ),
+            },
+        ),
     )
 
     add_fieldsets = UserAdmin.add_fieldsets + (
