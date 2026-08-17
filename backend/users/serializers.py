@@ -10,6 +10,14 @@ from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+try:
+    from startups.models import Tag
+except ImportError:
+    try:
+        from .models import Tag
+    except ImportError:
+        Tag = None
+
 User = get_user_model()
 logger = logging.getLogger(__name__)
 
@@ -31,7 +39,6 @@ class LoginSerializer(TokenObtainPairSerializer):
         user = User.objects.filter(email__iexact=email).first()
 
         if not user or not user.check_password(password) or not user.is_active:
-
             raise AuthenticationFailed("Invalid credentials", code="bad_credentials")
 
         self.user = user
@@ -102,3 +109,23 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 
         logger.info("AUDIT: Password successfully reset for user ID: %s", user.pk)
         return user
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    """Serializer for user profile detail and updates."""
+
+    tags = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=Tag.objects.all() if Tag is not None else [],
+        required=False,
+    )
+
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "email",
+            "role",
+            "tags",
+        ]
+        read_only_fields = ["id", "email"]

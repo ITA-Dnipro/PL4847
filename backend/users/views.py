@@ -8,8 +8,8 @@ from django.core.mail import EmailMultiAlternatives, send_mail
 from django.template.exceptions import TemplateDoesNotExist
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
-from rest_framework import status
-from rest_framework.permissions import AllowAny
+from rest_framework import generics, status
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework.views import APIView
@@ -20,6 +20,7 @@ from .serializers import (
     LoginSerializer,
     PasswordResetConfirmSerializer,
     PasswordResetRequestSerializer,
+    ProfileSerializer,
 )
 
 logger = logging.getLogger(__name__)
@@ -47,6 +48,7 @@ class LoginThrottle(AnonRateThrottle):
 class LoginView(TokenObtainPairView):
     """
     POST /api/auth/login/
+
     Accepts email + password (+ optional remember flag) and returns
     JWT access & refresh tokens along with user payload.
     Includes rate-limiting for brute-force protection.
@@ -60,6 +62,7 @@ class LoginView(TokenObtainPairView):
 class LogoutView(APIView):
     """
     POST /api/auth/logout/
+
     Endpoint to blacklist refresh token and logout user.
     """
 
@@ -86,6 +89,7 @@ class LogoutView(APIView):
 class PasswordResetRequestView(APIView):
     """
     POST /api/auth/password-reset/
+
     Endpoint to request a password reset email.
     """
 
@@ -170,6 +174,7 @@ class PasswordResetRequestView(APIView):
 class PasswordResetConfirmView(APIView):
     """
     POST /api/auth/password-reset/confirm/
+
     Endpoint to validate reset token, apply password complexity rules, and update user password.
     """
 
@@ -195,3 +200,19 @@ class PasswordResetConfirmView(APIView):
             )
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ProfileDetailView(generics.RetrieveUpdateAPIView):
+    """
+    GET /api/profiles/<uuid:id>/
+    PUT/PATCH /api/profiles/<uuid:id>/
+
+    Endpoint to view and update user profile details.
+    """
+
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = "id"
+
+    def get_queryset(self):
+        return User.objects.all()
