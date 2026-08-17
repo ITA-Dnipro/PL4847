@@ -6,6 +6,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMultiAlternatives, send_mail
+from django.db import transaction
 from django.http import Http404
 from django.template.exceptions import TemplateDoesNotExist
 from django.template.loader import render_to_string
@@ -15,6 +16,10 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework.views import APIView
+from rest_framework_simplejwt.token_blacklist.models import (
+    BlacklistedToken,
+    OutstandingToken,
+)
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -58,10 +63,12 @@ class LoginThrottle(AnonRateThrottle):
 
 
 class PasswordResetRequestThrottle(AnonRateThrottle):
+    scope = "password_reset_request"
     rate = "5/min"
 
 
 class PasswordResetConfirmThrottle(AnonRateThrottle):
+    scope = "password_reset_confirm"
     rate = "5/min"
 
 
@@ -110,13 +117,10 @@ class PasswordResetRequestView(APIView):
                         .rstrip("=")
                     )
                     token = default_token_generator.make_token(user)
-                    combined_token = f"{uidb64}:{token}"
                     frontend_url = getattr(
-                        settings, "FRONTEND_URL", "http://localhost:3000"
+                        settings, "FRONTEND_URL", "http://localhost:5173"
                     )
-                    reset_url = (
-                        f"{frontend_url}/password-reset/confirm?token={combined_token}"
-                    )
+                    reset_url = f"{frontend_url}/password-reset/confirm?uid={uidb64}&token={token}"
 
                     context = {"user": user, "reset_url": reset_url}
                     subject = "Скидання пароля"
@@ -159,18 +163,43 @@ class PasswordResetConfirmView(APIView):
     permission_classes = (AllowAny,)
     throttle_classes = [PasswordResetConfirmThrottle]
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         serializer = PasswordResetConfirmSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.validated_data["user"]
-            password = serializer.validated_data["password"]
+        if not serializer.is_valid():
+            errors = serializer.errors
+            if "password" in errors:
+                return Response(
+                    {"password": errors["password"]},
+                    status=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                )
+            return Response(
+                {"detail": "Invalid or expired token."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        user = serializer.validated_data["user"]
+        password = serializer.validated_data["password"]
+
+        with transaction.atomic():
             user.set_password(password)
             user.save()
-            return Response(
-                {"message": "Password has been reset successfully."},
-                status=status.HTTP_200_OK,
-            )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            for outstanding_token in OutstandingToken.objects.filter(user=user):
+                BlacklistedToken.objects.get_or_create(token=outstanding_token)
+
+        user_ip_address = request.META.get("REMOTE_ADDR")
+        user_agent = request.META.get("HTTP_USER_AGENT")
+
+        logger.info(
+            "AUDIT: Password reset successfully completed for user ID: %s, IP: %s, UA: %s",
+            user.pk,
+            user_ip_address,
+            user_agent,
+        )
+        return Response(
+            {"detail": "Password changed successfully."},
+            status=status.HTTP_200_OK,
+        )
 
 
 class ProfileDetailView(generics.RetrieveUpdateAPIView):
