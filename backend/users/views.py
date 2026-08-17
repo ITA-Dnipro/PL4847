@@ -177,14 +177,14 @@ class PasswordResetConfirmView(APIView):
                 {"detail": "Invalid or expired token."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        
+
         user = serializer.validated_data["user"]
         password = serializer.validated_data["password"]
 
         with transaction.atomic():
             user.set_password(password)
             user.save()
-            
+
             for outstanding_token in OutstandingToken.objects.filter(user=user):
                 BlacklistedToken.objects.get_or_create(token=outstanding_token)
 
