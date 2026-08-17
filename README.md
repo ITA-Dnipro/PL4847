@@ -148,3 +148,35 @@ The Codecov upload step uses `fail_ci_if_error: false`.
 If `CODECOV_TOKEN` is missing or incorrect, or if the Codecov upload fails,
 the error will be reported in the workflow logs, but it will not fail the
 entire CI pipeline.
+
+### Authentication API
+
+#### `POST /api/auth/login/`
+Authenticates user with email and password, returning short-lived access and refresh JWT tokens.
+
+- **Rate Limit:** 5 requests per minute (per IP)
+- **Request Body:**
+  ```json
+  {
+    "email": "user@example.com",
+    "password": "P@ssw0rd123",
+    "remember": true
+  }
+
+{
+  "access": "<jwt-access-token>",
+  "refresh": "<jwt-refresh-token>",
+  "user": {
+    "id": 1,
+    "email": "user@example.com",
+    "role": "startup"
+  }
+}
+
+Error Responses:
+
+400 Bad Request: Відсутні обов'язкові поля (email або password).
+
+401 Unauthorized: Невірні облікові дані ({"detail": "Invalid credentials"}).
+
+429 Too Many Requests: Перевищено ліміт спроб входу (більше 5 на хвилину).
