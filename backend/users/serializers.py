@@ -26,6 +26,33 @@ def _is_inactive_test():
         pass
     return False
 
+class RegisterSerializer(serializers.Serializer):
+    company_name = serializers.CharField(required=True, max_length=255)
+    email = serializers.EmailField(required=True)
+    password = serializers.CharField(required=True, write_only=True, style={"input_type": "password"})
+    password_confirm = serializers.CharField(required=True, write_only=True, style={"input_type": "password"})
+    last_name = serializers.CharField(required=True, max_length=150)
+    first_name = serializers.CharField(required=True, max_length=150)
+    role = serializers.ChoiceField(choices=[User.Role.STARTUP, User.Role.INVESTOR], required=True)
+    short_pitch = serializers.CharField(required=False, allow_blank=True)
+    website = serializers.URLField(required=False, allow_blank=True, max_length=500)
+    contact_phone = serializers.RegexField(regex=r"^\+380\d{9}$", required=False, allow_blank=True)
+    
+    def validate(self, attrs):
+        password = attrs["password"]
+        password_confirm = attrs["password_confirm"]
+        if password != password_confirm:
+            raise serializers.ValidationError({"password_confirm": "Passwords do not match"})
+        
+        temp_user = User(email=attrs["email"], first_name=attrs["first_name"], last_name=attrs["last_name"])
+        
+        try:
+            validate_password(password=password, user=temp_user)
+        except DjangoValidationError as e:
+            raise serializers.ValidationError({"password": list(e.messages)})
+        
+        return attrs
+    
 
 class LoginSerializer(TokenObtainPairSerializer):
     username_field = "email"
