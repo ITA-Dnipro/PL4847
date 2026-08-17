@@ -177,30 +177,30 @@ class PasswordResetConfirmView(APIView):
                 {"detail": "Invalid or expired token."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        else:
-            user = serializer.validated_data["user"]
-            password = serializer.validated_data["password"]
+        
+        user = serializer.validated_data["user"]
+        password = serializer.validated_data["password"]
 
-            with transaction.atomic():
-                user.set_password(password)
-                user.save()
+        with transaction.atomic():
+            user.set_password(password)
+            user.save()
+            
+            for outstanding_token in OutstandingToken.objects.filter(user=user):
+                BlacklistedToken.objects.get_or_create(token=outstanding_token)
 
-                for outstanding_token in OutstandingToken.objects.filter(user=user):
-                    BlacklistedToken.objects.get_or_create(token=outstanding_token)
+        user_ip_address = request.META.get("REMOTE_ADDR")
+        user_agent = request.META.get("HTTP_USER_AGENT")
 
-            user_ip_address = request.META.get("REMOTE_ADDR")
-            user_agent = request.META.get("HTTP_USER_AGENT")
-
-            logger.info(
-                "AUDIT: Password reset successfully completed for user ID: %s, IP: %s, UA: %s",
-                user.pk,
-                user_ip_address,
-                user_agent,
-            )
-            return Response(
-                {"detail": "Password changed successfully."},
-                status=status.HTTP_200_OK,
-            )
+        logger.info(
+            "AUDIT: Password reset successfully completed for user ID: %s, IP: %s, UA: %s",
+            user.pk,
+            user_ip_address,
+            user_agent,
+        )
+        return Response(
+            {"detail": "Password changed successfully."},
+            status=status.HTTP_200_OK,
+        )
 
 
 class ProfileDetailView(generics.RetrieveUpdateAPIView):
