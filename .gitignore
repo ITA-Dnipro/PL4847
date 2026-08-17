@@ -223,9 +223,7 @@ __marimo__/
 
 # PyCharm / JetBrains IDE settings
 .idea/
-<<<<<<< HEAD
-=======
 
-# PyCharm / JetBrains IDE settings
-.idea/
->>>>>>> 4823cff6af43b2a9f09b28b257ad3330732f7177
+# Claude md file
+
+CLAUDE.md
