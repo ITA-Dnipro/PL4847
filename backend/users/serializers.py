@@ -21,30 +21,27 @@ class PasswordResetRequestSerializer(serializers.Serializer):
 class PasswordResetConfirmSerializer(serializers.Serializer):
     """Serializer for confirming and setting a new password via reset token."""
 
+    uid = serializers.CharField(required=True)
     token = serializers.CharField(required=True)
     password = serializers.CharField(
         write_only=True, required=True, style={"input_type": "password"}
     )
 
     def validate(self, data):
+        uidb64 = data.get("uid")
         raw_token = data.get("token")
         password = data.get("password")
-
-        if not raw_token or ":" not in raw_token:
-            raise serializers.ValidationError({"token": "Invalid or expired token."})
-
-        uidb64, token = raw_token.split(":", 1)
 
         try:
             uid = force_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
             raise serializers.ValidationError(
-                {"token": "Invalid or expired token."}
+                {"detail": "Invalid or expired token."}
             ) from None
 
-        if not default_token_generator.check_token(user, token):
-            raise serializers.ValidationError({"token": "Invalid or expired token."})
+        if not default_token_generator.check_token(user, raw_token):
+            raise serializers.ValidationError({"detail": "Invalid or expired token."})
 
         try:
             validate_password(password, user=user)

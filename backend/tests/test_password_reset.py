@@ -37,6 +37,9 @@ class TestPasswordReset:
         response = api_client.post(url, {"email": "test@example.com"})
 
         assert response.status_code == status.HTTP_200_OK
+        assert response.data == {
+            "detail": "If the email exists, you will receive reset instructions."
+        }
         assert len(mail.outbox) == 1
         assert "Скидання пароля" in mail.outbox[0].subject
         assert "test@example.com" in mail.outbox[0].to
@@ -49,6 +52,9 @@ class TestPasswordReset:
         response = api_client.post(url, {"email": "nonexistent@example.com"})
 
         assert response.status_code == status.HTTP_200_OK
+        assert response.data == {
+            "detail": "If the email exists, you will receive reset instructions."
+        }
         assert len(mail.outbox) == 0
 
     def test_confirm_reset_success(self, api_client, test_user):
@@ -56,16 +62,17 @@ class TestPasswordReset:
             base64.urlsafe_b64encode(force_bytes(test_user.pk)).decode().rstrip("=")
         )
         token = default_token_generator.make_token(test_user)
-        combined_token = f"{uidb64}:{token}"
 
         url = reverse("users:password-reset-confirm")
         data = {
-            "token": combined_token,
+            "uid": uidb64,
+            "token": token,
             "password": "NewStrongP@ssword2026",
         }
         response = api_client.post(url, data)
 
         assert response.status_code == status.HTTP_200_OK
+        assert response.data == {"detail": "Password changed successfully."}
         test_user.refresh_from_db()
         assert test_user.check_password("NewStrongP@ssword2026")
 
@@ -73,14 +80,32 @@ class TestPasswordReset:
         uidb64 = (
             base64.urlsafe_b64encode(force_bytes(test_user.pk)).decode().rstrip("=")
         )
-        combined_token = f"{uidb64}:invalid-token-123"
 
         url = reverse("users:password-reset-confirm")
         data = {
-            "token": combined_token,
+            "uid": uidb64,
+            "token": "invalid-token-123",
             "password": "NewStrongP@ssword2026",
         }
         response = api_client.post(url, data)
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert "token" in response.data
+        assert response.data == {"detail": "Invalid or expired token."}
+
+    def test_confirm_reset_rejects_combined_uid_and_token_payload(
+        self, api_client, test_user
+    ):
+        uidb64 = (
+            base64.urlsafe_b64encode(force_bytes(test_user.pk)).decode().rstrip("=")
+        )
+        token = default_token_generator.make_token(test_user)
+
+        url = reverse("users:password-reset-confirm")
+        data = {
+            "token": f"{uidb64}:{token}",
+            "password": "NewStrongP@ssword2026",
+        }
+        response = api_client.post(url, data)
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert "uid" in response.data

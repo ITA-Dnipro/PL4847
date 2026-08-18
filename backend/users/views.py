@@ -83,14 +83,11 @@ class PasswordResetRequestView(APIView):
                         .rstrip("=")
                     )
                     token = default_token_generator.make_token(user)
-                    combined_token = f"{uidb64}:{token}"
 
                     frontend_url = getattr(
                         settings, "FRONTEND_URL", "http://localhost:3000"
                     )
-                    reset_url = (
-                        f"{frontend_url}/password-reset/confirm?token={combined_token}"
-                    )
+                    reset_url = f"{frontend_url}/reset-password/?uid={uidb64}&token={token}"
 
                     context = {"user": user, "reset_url": reset_url}
                     subject = "Скидання пароля"
@@ -134,9 +131,7 @@ class PasswordResetRequestView(APIView):
                 )
 
             return Response(
-                {
-                    "message": "If an account with that email exists, password reset instructions have been sent."
-                },
+                {"detail": "If the email exists, you will receive reset instructions."},
                 status=status.HTTP_200_OK,
             )
 
@@ -155,19 +150,20 @@ class PasswordResetConfirmView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = PasswordResetConfirmSerializer(data=request.data)
         if serializer.is_valid():
-            user = serializer.validated_data["user"]
-            password = serializer.validated_data["password"]
-
-            user.set_password(password)
-            user.save()
-
+            user = serializer.save()
             logger.info(
                 "AUDIT: Password reset successfully completed for user ID: %s",
                 user.pk,
             )
             return Response(
-                {"message": "Password has been reset successfully."},
+                {"detail": "Password changed successfully."},
                 status=status.HTTP_200_OK,
+            )
+
+        if "detail" in serializer.errors:
+            return Response(
+                {"detail": serializer.errors["detail"][0]},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
