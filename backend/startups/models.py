@@ -64,6 +64,10 @@ class StartupProfile(models.Model):
     contact_email = models.EmailField(
         blank=True,
     )
+    contact_phone = models.CharField(
+        max_length=13,
+        blank=True
+    )
     logo_url = models.URLField(
         max_length=500,
         blank=True,

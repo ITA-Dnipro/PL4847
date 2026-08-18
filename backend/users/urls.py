@@ -5,6 +5,7 @@ from .views import (
     PasswordResetConfirmView,
     PasswordResetRequestView,
     ProfileDetailView,
+    RegisterView
 )
 
 app_name = "users"
@@ -30,4 +31,9 @@ urlpatterns = [
         ProfileDetailView.as_view(),
         name="profile-detail",
     ),
+    path(
+        "auth/register/",
+        RegisterView.as_view(),
+        name="register"
+    )
 ]

@@ -28,7 +28,7 @@ def _is_inactive_test():
 
 class RegisterSerializer(serializers.Serializer):
     company_name = serializers.CharField(required=True, max_length=255)
-    email = serializers.EmailField(required=True)
+    email = serializers.EmailField(required=True, max_length=150)
     password = serializers.CharField(required=True, write_only=True, style={"input_type": "password"})
     password_confirm = serializers.CharField(required=True, write_only=True, style={"input_type": "password"})
     last_name = serializers.CharField(required=True, max_length=150)
