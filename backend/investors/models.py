@@ -32,10 +32,7 @@ class InvestorProfile(models.Model):
     contact_email = models.EmailField(
         blank=True,
     )
-    contact_phone = models.CharField(
-        max_length=13,
-        blank=True
-    )
+    contact_phone = models.CharField(max_length=13, blank=True)
     investment_focus = models.CharField(
         max_length=255,
         blank=True,

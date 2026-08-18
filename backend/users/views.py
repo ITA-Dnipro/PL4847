@@ -13,6 +13,7 @@ from django.template.exceptions import TemplateDoesNotExist
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.text import slugify
+from investors.models import InvestorProfile
 from rest_framework import generics, permissions, status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -24,6 +25,7 @@ from rest_framework_simplejwt.token_blacklist.models import (
 )
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
+from startups.models import StartupProfile
 
 from .serializers import (
     LoginSerializer,
@@ -32,8 +34,6 @@ from .serializers import (
     ProfileSerializer,
     RegisterSerializer,
 )
-from startups.models import StartupProfile
-from investors.models import InvestorProfile
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -227,16 +227,21 @@ class ProfileDetailView(generics.RetrieveUpdateAPIView):
 
 
 class RegisterView(APIView):
-    permission_classes = (AllowAny, )
-    
+    permission_classes = (AllowAny,)
+
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-        if User.objects.filter(email__iexact=serializer.validated_data["email"]).exists():
-            return Response({"detail": "A user with this email already exists"}, status=status.HTTP_409_CONFLICT)
-        
+
+        if User.objects.filter(
+            email__iexact=serializer.validated_data["email"]
+        ).exists():
+            return Response(
+                {"detail": "A user with this email already exists"},
+                status=status.HTTP_409_CONFLICT,
+            )
+
         with transaction.atomic():
             user = User.objects.create_user(
                 username=serializer.validated_data["email"],
@@ -245,9 +250,9 @@ class RegisterView(APIView):
                 is_active=False,
                 role=serializer.validated_data["role"],
                 first_name=serializer.validated_data["first_name"],
-                last_name=serializer.validated_data["last_name"]
-                )
-            
+                last_name=serializer.validated_data["last_name"],
+            )
+
             if serializer.validated_data["role"] == User.Role.STARTUP:
                 base_slug = slugify(serializer.validated_data["company_name"])
                 slug = base_slug
@@ -255,33 +260,35 @@ class RegisterView(APIView):
                 while StartupProfile.objects.filter(slug=slug).exists():
                     slug = f"{base_slug}-{counter}"
                     counter += 1
-                    
+
                 StartupProfile.objects.create(
-                    user=user, 
+                    user=user,
                     company_name=serializer.validated_data["company_name"],
                     slug=slug,
                     short_description=serializer.validated_data.get("short_pitch", ""),
                     website=serializer.validated_data.get("website", ""),
-                    contact_phone=serializer.validated_data.get("contact_phone", "")
-                    )
+                    contact_phone=serializer.validated_data.get("contact_phone", ""),
+                )
             elif serializer.validated_data["role"] == User.Role.INVESTOR:
                 InvestorProfile.objects.create(
                     user=user,
                     company_name=serializer.validated_data["company_name"],
                     description=serializer.validated_data.get("short_pitch", ""),
                     website=serializer.validated_data.get("website", ""),
-                    contact_phone=serializer.validated_data.get("contact_phone", "")
+                    contact_phone=serializer.validated_data.get("contact_phone", ""),
                 )
-                
+
             def _send_email_safely():
                 try:
                     send_verification_email(user)
                 except Exception:
-                    logger.exception("Failed to send verification email to user ID %s", user.pk)
-                    
+                    logger.exception(
+                        "Failed to send verification email to user ID %s", user.pk
+                    )
+
             transaction.on_commit(_send_email_safely)
-        
+
         return Response(
             {"id": user.id, "email": user.email, "detail": "Verification email sent."},
             status=status.HTTP_201_CREATED,
-            )
+        )
