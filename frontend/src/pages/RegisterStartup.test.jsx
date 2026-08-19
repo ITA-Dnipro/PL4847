@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import RegisterStartup from './RegisterStartup'
 
 function mockFooterFetch(url) {
@@ -17,7 +18,11 @@ function registerCalls() {
 }
 
 function renderForm() {
-  return render(<RegisterStartup />)
+  return render(
+    <MemoryRouter>
+      <RegisterStartup />
+    </MemoryRouter>
+  )
 }
 
 function fillValidForm() {
@@ -41,6 +46,12 @@ describe('RegisterStartup', () => {
     expect(screen.getByLabelText('Пароль')).toBeInTheDocument()
     expect(screen.getByLabelText('Назва компанії')).toBeInTheDocument()
     expect(screen.getByLabelText('Я погоджуюсь з умовами використання')).toBeInTheDocument()
+  })
+
+  it('renders a link to log in for people who already have an account', () => {
+    renderForm()
+    const link = screen.getByRole('link', { name: 'Увійти' })
+    expect(link).toHaveAttribute('href', '/login')
   })
 
   it('shows validation errors and does not call the register API when submitted blank', () => {

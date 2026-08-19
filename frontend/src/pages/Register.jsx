@@ -17,6 +17,14 @@ function Register() {
             <span className="register-picker__card-title">Зареєструватися як інвестор</span>
           </Link>
         </div>
+
+        <p className="register-picker__login-hint">
+          Ви вже зареєстровані?{" "}
+          <Link to="/login" className="register-picker__login-link">
+            <span className="register-picker__login-link-label">Увійти</span>
+            <span className="register-picker__login-link-underline" />
+          </Link>
+        </p>
       </div>
       <Footer />
     </>

@@ -1,19 +1,18 @@
 .register-startup {
-    display: flex;
-    justify-content: center;
-    padding: 48px 24px 80px;
-    box-sizing: border-box;
-    background: var(--fw-bg);
-    flex: 1;
-  }
-
+  display: flex;
+  justify-content: center;
+  padding: 48px 24px 80px;
+  box-sizing: border-box;
+  background: var(--fw-bg);
+  flex: 1;
+}
 
 .register-startup__card {
   width: 100%;
-  max-width: 480px;
+  max-width: 560px;
   background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 6px;
   padding: 40px;
   box-sizing: border-box;
   display: flex;
@@ -201,14 +200,54 @@ textarea.register-startup__input {
   outline-offset: 2px;
 }
 
-.register-startup__confirmation {
-    max-width: 480px;
-    margin: 48px auto;
-    text-align: center;
-    padding: 0 24px;
-    flex: 1;
-  }
+.register-startup__login-hint {
+  font-family: 'Geologica', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: -0.01em;
+  color: var(--fw-text);
+  text-align: center;
+  margin: 0;
+}
 
+.register-startup__login-link {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.register-startup__login-link-label {
+  font-family: 'Geologica', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: -0.01em;
+  color: #000000;
+}
+
+.register-startup__login-link-underline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1.3px;
+  background: transparent;
+  transition: background-color 0.2s;
+}
+
+.register-startup__login-link:hover .register-startup__login-link-underline,
+.register-startup__login-link:focus-visible .register-startup__login-link-underline {
+  background: #000000;
+}
+
+.register-startup__confirmation {
+  max-width: 480px;
+  margin: 48px auto;
+  text-align: center;
+  padding: 0 24px;
+  flex: 1;
+}
 
 @media (max-width: 640px) {
   .register-startup {

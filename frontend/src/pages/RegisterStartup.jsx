@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Link } from "react-router-dom"
 import Footer from "../components/Footer"
 import "./RegisterStartup.css"
 
@@ -261,6 +262,14 @@ function RegisterStartup() {
           <button className="register-startup__submit" type="submit" disabled={isSubmitting}>
             {isSubmitting ? "Реєстрація..." : "Зареєструватися"}
           </button>
+
+          <p className="register-startup__login-hint">
+            Ви вже зареєстровані?{" "}
+            <Link to="/login" className="register-startup__login-link">
+              <span className="register-startup__login-link-label">Увійти</span>
+              <span className="register-startup__login-link-underline" />
+            </Link>
+          </p>
         </form>
       </div>
       <Footer />
