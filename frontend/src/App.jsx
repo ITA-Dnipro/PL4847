@@ -7,6 +7,8 @@ import StartupView from "./pages/StartupView"
 import InvestorDashboard from "./pages/InvestorDashboard"
 import Inbox from "./pages/Inbox"
 import InfoPage from "./components/InfoPage"
+import RegisterStartup from "./pages/RegisterStartup"
+import RegisterInvestor from "./pages/RegisterInvestor"
 
 function App() {
   return (
@@ -31,6 +33,8 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/register/startup" element={<RegisterStartup />} />
+      <Route path="/register/investor" element={<RegisterInvestor />} />
       <Route path="/startups/:id" element={<StartupView />} />
       <Route path="/dashboard" element={<InvestorDashboard />} />
       <Route path="/messages" element={<Inbox />} />
