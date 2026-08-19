@@ -6,8 +6,8 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import F, Q
-
 from startups.validators import phone_validator
+
 
 class InvestorProfile(models.Model):
     id = models.UUIDField(
@@ -33,7 +33,9 @@ class InvestorProfile(models.Model):
     contact_email = models.EmailField(
         blank=True,
     )
-    contact_phone = models.CharField(max_length=13, blank=True, validators=[phone_validator])
+    contact_phone = models.CharField(
+        max_length=13, blank=True, validators=[phone_validator]
+    )
     investment_focus = models.CharField(
         max_length=255,
         blank=True,

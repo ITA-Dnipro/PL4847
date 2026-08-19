@@ -7,6 +7,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
+from django.utils.text import slugify
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -47,6 +48,13 @@ class RegisterSerializer(serializers.Serializer):
         regex=r"^\+380\d{9}$", required=False, allow_blank=True
     )
 
+    def validate_company_name(self, value):
+        if not slugify(value):
+            raise serializers.ValidationError(
+                "Company name must contain at least one letter or digit"
+            )
+        return value
+
     def validate(self, attrs):
         password = attrs["password"]
         password_confirm = attrs["password_confirm"]
@@ -64,7 +72,7 @@ class RegisterSerializer(serializers.Serializer):
         try:
             validate_password(password=password, user=temp_user)
         except DjangoValidationError as e:
-            raise serializers.ValidationError({"password": list(e.messages)})
+            raise serializers.ValidationError({"password": list(e.messages)}) from e
 
         return attrs
 

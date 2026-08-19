@@ -3,6 +3,7 @@ import uuid
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
+
 from .validators import phone_validator
 
 
@@ -65,7 +66,9 @@ class StartupProfile(models.Model):
     contact_email = models.EmailField(
         blank=True,
     )
-    contact_phone = models.CharField(max_length=13, blank=True, validators=[phone_validator])
+    contact_phone = models.CharField(
+        max_length=13, blank=True, validators=[phone_validator]
+    )
     logo_url = models.URLField(
         max_length=500,
         blank=True,
