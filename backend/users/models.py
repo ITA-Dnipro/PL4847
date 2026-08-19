@@ -2,6 +2,7 @@ import uuid
 
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
+from django.db.models.functions import Lower
 from django.utils import timezone
 
 
@@ -44,6 +45,11 @@ class User(AbstractUser):
         blank=True,
     )
     stats = models.JSONField(default=dict, blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(Lower("email"), name="unique_lower_email")
+        ]
 
     @property
     def is_active_profile(self) -> bool:
