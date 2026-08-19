@@ -164,6 +164,8 @@ function RegisterStartup() {
         <form className="register-startup__card" onSubmit={handleSubmit}>
           <h1 className="register-startup__title">Реєстрація стартапу</h1>
 
+          <p className="register-startup__required-note">* Обов'язкові поля позначені зірочкою</p>
+
           {serverError && (
             <p className="register-startup__server-error" role="alert">
               {serverError}
@@ -171,19 +173,28 @@ function RegisterStartup() {
           )}
 
           <div className="register-startup__field">
-            <label className="register-startup__label" htmlFor="company_name">Назва компанії</label>
+            <span className="register-startup__label-row">
+              <label className="register-startup__label" htmlFor="company_name">Назва компанії</label>
+              <span className="register-startup__required-mark" aria-hidden="true">*</span>
+            </span>
             <input className="register-startup__input" type="text" id="company_name" name="company_name" value={formData.company_name} onChange={handleChange} placeholder="Введіть назву компанії" />
             {errors.company_name && <p className="register-startup__error">{errors.company_name}</p>}
           </div>
 
           <div className="register-startup__field">
-            <label className="register-startup__label" htmlFor="email">Електронна пошта</label>
+            <span className="register-startup__label-row">
+              <label className="register-startup__label" htmlFor="email">Електронна пошта</label>
+              <span className="register-startup__required-mark" aria-hidden="true">*</span>
+            </span>
             <input className="register-startup__input" type="email" id="email" name="email" value={formData.email} onChange={handleChange} placeholder="Введіть свою електронну пошту" />
             {errors.email && <p className="register-startup__error">{errors.email}</p>}
           </div>
 
           <div className="register-startup__field">
-            <label className="register-startup__label" htmlFor="password">Пароль</label>
+            <span className="register-startup__label-row">
+              <label className="register-startup__label" htmlFor="password">Пароль</label>
+              <span className="register-startup__required-mark" aria-hidden="true">*</span>
+            </span>
             <p className="register-startup__hint">
               Пароль повинен мати 8+ символів, містити принаймні велику, малу літеру (A..Z, a..z) та цифру (0..9).
             </p>
@@ -192,19 +203,28 @@ function RegisterStartup() {
           </div>
 
           <div className="register-startup__field">
-            <label className="register-startup__label" htmlFor="password_confirm">Повторіть пароль</label>
+            <span className="register-startup__label-row">
+              <label className="register-startup__label" htmlFor="password_confirm">Повторіть пароль</label>
+              <span className="register-startup__required-mark" aria-hidden="true">*</span>
+            </span>
             <input className="register-startup__input" type="password" id="password_confirm" name="password_confirm" value={formData.password_confirm} onChange={handleChange} placeholder="Введіть пароль ще раз" />
             {errors.password_confirm && <p className="register-startup__error">{errors.password_confirm}</p>}
           </div>
 
           <div className="register-startup__field">
-            <label className="register-startup__label" htmlFor="first_name">Ім'я</label>
+            <span className="register-startup__label-row">
+              <label className="register-startup__label" htmlFor="first_name">Ім'я</label>
+              <span className="register-startup__required-mark" aria-hidden="true">*</span>
+            </span>
             <input className="register-startup__input" type="text" id="first_name" name="first_name" value={formData.first_name} onChange={handleChange} placeholder="Введіть ваше ім'я" />
             {errors.first_name && <p className="register-startup__error">{errors.first_name}</p>}
           </div>
 
           <div className="register-startup__field">
-            <label className="register-startup__label" htmlFor="last_name">Прізвище</label>
+            <span className="register-startup__label-row">
+              <label className="register-startup__label" htmlFor="last_name">Прізвище</label>
+              <span className="register-startup__required-mark" aria-hidden="true">*</span>
+            </span>
             <input className="register-startup__input" type="text" id="last_name" name="last_name" value={formData.last_name} onChange={handleChange} placeholder="Введіть ваше прізвище" />
             {errors.last_name && <p className="register-startup__error">{errors.last_name}</p>}
           </div>
@@ -256,6 +276,7 @@ function RegisterStartup() {
               <input className="register-startup__checkbox" type="checkbox" name="terms_accepted" checked={formData.terms_accepted} onChange={handleChange} />
               Я погоджуюсь з умовами використання
             </label>
+            <span className="register-startup__required-mark" aria-hidden="true">*</span>
             {errors.terms_accepted && <p className="register-startup__error">{errors.terms_accepted}</p>}
           </div>
 
