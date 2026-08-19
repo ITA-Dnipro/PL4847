@@ -1,3 +1,62 @@
 .register-picker {
-      flex: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  padding: var(--margin-top-bottom) var(--margin-left-right);
+  gap: 24px;
+  background: var(--fw-bg);
+}
+
+.register-picker__heading {
+  font-family: 'Geologica', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--fw-text);
+  margin: 0;
+}
+
+.register-picker__cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 360px;
+}
+
+.register-picker__card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 102px;
+  border-radius: 6px;
+  padding: 18px;
+  background: var(--cta-btn-text);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.register-picker__card:hover,
+.register-picker__card:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(35, 36, 36, 0.12);
+  background: #fffaf3;
+}
+
+.register-picker__card-title {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 140%;
+  letter-spacing: 0.01em;
+  color: var(--fw-text);
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .register-picker {
+    padding: 32px 20px;
+  }
 }
