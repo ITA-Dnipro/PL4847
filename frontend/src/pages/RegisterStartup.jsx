@@ -19,6 +19,7 @@ function RegisterStartup() {
     contact_phone: "",
     pitch_deck: null,
     terms_accepted: false,
+    newletter_opt_In: false,
   })
 
   const [errors, setErrors] = useState({})
@@ -123,6 +124,8 @@ function RegisterStartup() {
           short_pitch: formData.short_pitch,
           website: formData.website,
           contact_phone: formData.contact_phone ? `+380${formData.contact_phone}` : "",
+          terms_accepted: formData.terms_accepted,
+          newsletter_opt_in: formData.newsletter_opt_in,
         }),
       })
 
@@ -324,11 +327,23 @@ function RegisterStartup() {
           <div className="register-startup__field register-startup__field--checkbox">
             <label className="register-startup__checkbox-label">
               <input className="register-startup__checkbox" type="checkbox" name="terms_accepted" checked={formData.terms_accepted} onChange={handleChange} />
-              Я погоджуюсь з умовами використання
+              <span>
+                Я погоджуюсь з <Link to="/terms" target="_blank" rel="noopener noreferrer" className="register-startup__legal-link">умовами використання</Link> та <Link to="/privacy" target="_blank" rel="noopener noreferrer"
+                  className="register-startup__legal-link">політикою конфіденційності</Link>
+                <span className="register-startup__required-mark" aria-hidden="true">{"\u00A0*"}</span>
+              </span>
             </label>
-            <span className="register-startup__required-mark" aria-hidden="true">*</span>
+
             {errors.terms_accepted && <p className="register-startup__error">{errors.terms_accepted}</p>}
           </div>
+
+          <div className="register-startup__field register-startup__field--checkbox">
+            <label className="register-startup__checkbox-label">
+              <input className="register-startup__checkbox" type="checkbox" name="newsletter_opt_in" checked={formData.newsletter_opt_in} onChange={handleChange} />
+              Надсилати мені новини та оновлення на пошту
+            </label>
+          </div>
+
 
           <button className="register-startup__submit" type="submit" disabled={isSubmitting}>
             {isSubmitting ? "Реєстрація..." : "Зареєструватися"}
