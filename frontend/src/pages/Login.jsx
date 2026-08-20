@@ -1,8 +1,13 @@
-import { useState } from "react"
-import { Link } from "react-router-dom"
+import { useContext, useState } from "react"
+import { Link, useLocation, useNavigate } from "react-router-dom"
+import AuthContext from "../context/AuthContext"
 import "./Login.css"
 
 function Login() {
+  const { login } = useContext(AuthContext)
+  const location = useLocation()
+  const navigate = useNavigate()
+
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [rememberMe, setRememberMe] = useState(false)
@@ -49,39 +54,27 @@ function Login() {
     setIsLoading(true)
 
     try {
-      const response = await fetch("/api/auth/login/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-          remember: rememberMe,
-        }),
-      })
+      await login(email, password, rememberMe)
 
-      if (response.status === 401) {
+      const from = location.state?.from
+      const destination = from
+        ? `${from.pathname}${from.search}${from.hash}`
+        : "/"
+
+      navigate(destination, { replace: true })
+    } catch (error) {
+      if (error.status === 401) {
         setServerError("Invalid email or password")
-        return
-      }
-
-      if (response.status === 429) {
+      } else if (error.status === 429) {
         setServerError(
           "Too many login attempts. Please try again later."
         )
-        return
-      }
-
-      if (!response.ok) {
+      } else if (error.status) {
         setServerError("Login failed. Please try again.")
-        return
+      } else {
+        console.error("Login error:", error)
+        setServerError("Unable to connect to the server.")
       }
-
-      await response.json()
-    } catch (error) {
-      console.error("Login error:", error)
-      setServerError("Unable to connect to the server.")
     } finally {
       setIsLoading(false)
     }
