@@ -4,18 +4,22 @@ import ForWhomGrid from "../components/ForWhomGrid"
 import Hero from "../components/Hero/Hero"
 import WhyWorthGrid from "../components/WhyWorthGrid"
 import Footer from "../components/Footer"
+import "./Home.css"
 
 function Home() {
   return (
-    <div>
-      <Hero />
-      <StartupsGrid />
-      <CTASection />
-      <ForWhomGrid />
-      <WhyWorthGrid />
+    <>
+      <main className="landing-page">
+        <Hero />
+        <StartupsGrid />
+        <CTASection />
+        <ForWhomGrid />
+        <WhyWorthGrid />
+      </main>
+
       <Footer />
-    </div>
-)
+    </>
+  )
 }
 
 export default Home;
