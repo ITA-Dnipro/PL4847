@@ -23,6 +23,7 @@ def valid_payload():
         "company_name": "Handmade Co",
         "first_name": "Alice",
         "last_name": "Smith",
+        "terms_accepted": True,
     }
 
 
@@ -40,7 +41,9 @@ class TestRegistrationEndpoint:
         user = User.objects.get(email="alice@example.com")
         assert user.is_active is False
         assert user.role == "startup"
-
+        assert user.terms_accepted_at is not None
+        assert user.consent_ip is not None
+        
         startup = user.startup_profile
         assert startup.company_name == "Handmade Co"
         assert startup.slug == "handmade-co"
@@ -68,7 +71,7 @@ class TestRegistrationEndpoint:
         assert len(mail.outbox) == 1
         assert "alice@example.com" in mail.outbox[0].to
 
-    @pytest.mark.django_db
+    
     def test_duplicate_email_returns_409(self, api_client, valid_payload):
         User.objects.create_user(
             email="alice@example.com", password="StrongPassword", username="Real"
@@ -82,7 +85,7 @@ class TestRegistrationEndpoint:
 
         assert User.objects.filter(email="alice@example.com").count() == 1
 
-    @pytest.mark.django_db
+    
     def test_password_missmatch_returns_400(self, api_client, valid_payload):
         valid_payload["password_confirm"] = "wrong"
 
@@ -93,7 +96,7 @@ class TestRegistrationEndpoint:
         assert "password_confirm" in response.data
         assert not User.objects.filter(email="alice@example.com").exists()
 
-    @pytest.mark.django_db
+    
     def test_weak_password_returns_400(self, api_client, valid_payload):
         valid_payload["password"] = "weak"
         valid_payload["password_confirm"] = "weak"
@@ -105,7 +108,7 @@ class TestRegistrationEndpoint:
         assert "password" in response.data
         assert not User.objects.filter(email="alice@example.com").exists()
 
-    @pytest.mark.django_db
+    
     def test_missing_required_field_returns_400(self, api_client, valid_payload):
         del valid_payload["password_confirm"]
 
@@ -116,7 +119,7 @@ class TestRegistrationEndpoint:
         assert "password_confirm" in response.data
         assert not User.objects.filter(email="alice@example.com").exists()
 
-    @pytest.mark.django_db
+   
     def test_invalid_role_returns_400(self, api_client, valid_payload):
         valid_payload["role"] = "no_role"
 
@@ -143,3 +146,27 @@ class TestRegistrationEndpoint:
 
         assert startup_1.slug == "handmade-co"
         assert startup_2.slug == "handmade-co-2"
+
+    
+    def test_terms_not_accepted_returns_400(self, api_client, valid_payload):
+        valid_payload["terms_accepted"] = False
+        
+        url = reverse("users:register")
+        response = api_client.post(url, valid_payload)
+        
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert "terms_accepted" in response.data
+        assert not User.objects.filter(email="alice@example.com").exists()
+        
+    @pytest.mark.django_db(transaction=True)
+    def test_newsletter_opt_in_persists(self, api_client, valid_payload):
+        valid_payload["newsletter_opt_in"] = True
+        
+        url = reverse("users:register")
+        response = api_client.post(url, valid_payload)
+        
+        assert response.status_code == status.HTTP_201_CREATED
+        
+        user = User.objects.get(email="alice@example.com")
+        assert user.newsletter_opt_in is True
+        

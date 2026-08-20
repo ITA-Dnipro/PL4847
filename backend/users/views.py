@@ -13,6 +13,7 @@ from django.template.exceptions import TemplateDoesNotExist
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.text import slugify
+from django.utils import timezone
 from investors.models import InvestorProfile
 from rest_framework import generics, permissions, status
 from rest_framework.permissions import AllowAny
@@ -251,6 +252,9 @@ class RegisterView(APIView):
                 role=serializer.validated_data["role"],
                 first_name=serializer.validated_data["first_name"],
                 last_name=serializer.validated_data["last_name"],
+                terms_accepted_at=timezone.now(),
+                newsletter_opt_in=serializer.validated_data.get("newsletter_opt_in", False),
+                consent_ip=request.META.get("REMOTE_ADDR")
             )
 
             if serializer.validated_data["role"] == User.Role.STARTUP:

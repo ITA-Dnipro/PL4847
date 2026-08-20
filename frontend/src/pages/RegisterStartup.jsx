@@ -19,7 +19,7 @@ function RegisterStartup() {
     contact_phone: "",
     pitch_deck: null,
     terms_accepted: false,
-    newletter_opt_In: false,
+    newsletter_opt_in: false,
   })
 
   const [errors, setErrors] = useState({})
