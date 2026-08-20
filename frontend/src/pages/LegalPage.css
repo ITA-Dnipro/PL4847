@@ -1,0 +1,67 @@
+.legal-page {
+    background: var(--fw-bg);
+    padding: var(--margin-top-bottom) var(--margin-left-right);
+    display: flex;
+    justify-content: center;
+}
+
+
+.legal-page__card {
+    max-width: 700px;
+    width: 100%;
+    text-align: left;
+}
+
+
+.legal-page__title {
+  font-family: 'Geologica', sans-serif;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 120%;
+  letter-spacing: 0;
+  color: var(--fw-text);
+  margin: 0 0 32px;
+}
+
+.legal-page__section {
+  margin-bottom: 24px;
+}
+
+.legal-page__section h2 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--fw-text);
+  margin: 0 0 12px;
+}
+
+.legal-page__section p {
+  font-size: 13px;
+  line-height: 160%;
+  color: var(--fw-text);
+  margin: 0 0 16px;
+}
+
+.legal-page__section p:last-child {
+  margin-bottom: 0;
+}
+
+.legal-page__list {
+  margin: 0 0 16px;
+  padding-left: 20px;
+}
+
+.legal-page__list li {
+  font-size: 13px;
+  line-height: 160%;
+  color: var(--fw-text);
+}
+
+.legal-page__section a {
+  color: var(--accent);
+}
+
+@media (max-width: 1024px) {
+  .legal-page {
+    padding: 48px 24px;
+  }
+}

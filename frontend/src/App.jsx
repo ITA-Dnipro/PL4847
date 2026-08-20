@@ -6,10 +6,12 @@ import InfoPage from "./components/InfoPage"
 import Home from "./pages/Home"
 import Search from "./pages/Search"
 import Login from "./pages/Login"
+import Privacy from "./pages/Privacy"
 import Register from "./pages/Register"
 import RegisterStartup from "./pages/RegisterStartup"
 import RegisterInvestor from "./pages/RegisterInvestor"
 import StartupView from "./pages/StartupView"
+import Terms from "./pages/Terms"
 import InvestorDashboard from "./pages/InvestorDashboard"
 import Inbox from "./pages/Inbox"
 
@@ -25,6 +27,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/register/startup" element={<RegisterStartup />} />
         <Route path="/register/investor" element={<RegisterInvestor />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
         <Route path="/startups/:id" element={<StartupView />} />
         <Route path="/dashboard" element={<InvestorDashboard />} />
         <Route path="/messages" element={<Inbox />} />
