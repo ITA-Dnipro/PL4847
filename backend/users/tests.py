@@ -4,9 +4,12 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
 from django.test import TestCase
+from django.urls import reverse
 from investors.models import InvestorProfile, SavedStartup
 from projects.models import Project
-from startups.models import StartupProfile
+from rest_framework import status
+from rest_framework.test import APITestCase
+from startups.models import StartupProfile, Tag
 
 User = get_user_model()
 
@@ -171,3 +174,165 @@ class InitialModelsTests(TestCase):
                 user=self.startup_user,
                 company_name="Invalid Investor",
             )
+
+
+class ProfileAPITests(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.owner = User.objects.create_user(
+            username="owner",
+            email="owner@example.com",
+            password="pass12345",
+            name="Owner Co",
+            slug="owner-co",
+            short_description="We do things",
+            website="https://example.com",
+            contact_email="owner@example.com",
+        )
+        cls.owner.touch()
+        cls.owner.save()
+
+        cls.other_user = User.objects.create_user(
+            username="other", email="other@example.com", password="pass12345"
+        )
+
+        cls.craft_tag = Tag.objects.create(name="Craft", slug="craft")
+        cls.owner.tags.add(cls.craft_tag)
+
+    def url(self, user):
+        return reverse("users:profile-detail", kwargs={"id": user.id})
+
+    def test_get_public_profile_returns_expected_payload(self):
+        response = self.client.get(self.url(self.owner))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        expected_keys = {
+            "id",
+            "name",
+            "slug",
+            "about_html",
+            "short_description",
+            "contact",
+            "website",
+            "tags",
+            "stats",
+            "visibility",
+        }
+        self.assertEqual(set(response.data.keys()), expected_keys)
+        self.assertEqual(response.data["visibility"], "public")
+        self.assertIn("craft", response.data["tags"])
+
+    def test_get_inactive_profile_hidden_from_public(self):
+        self.owner.deactivate()
+        self.owner.save()
+
+        response = self.client.get(self.url(self.owner))
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_get_inactive_profile_visible_to_owner(self):
+        self.owner.deactivate()
+        self.owner.save()
+
+        self.client.force_authenticate(user=self.owner)
+        response = self.client.get(self.url(self.owner))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["visibility"], "hidden")
+
+    def test_owner_can_patch_profile(self):
+        self.client.force_authenticate(user=self.owner)
+        response = self.client.patch(
+            self.url(self.owner), {"short_description": "Updated"}
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["short_description"], "Updated")
+        self.owner.refresh_from_db()
+        self.assertEqual(self.owner.name, "Owner Co")
+        self.assertIsNotNone(self.owner.updated_at)
+
+    def test_patch_deactivate_sets_updated_at_null(self):
+        self.client.force_authenticate(user=self.owner)
+        response = self.client.patch(self.url(self.owner), {"is_active": False})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["visibility"], "hidden")
+        self.owner.refresh_from_db()
+        self.assertIsNone(self.owner.updated_at)
+
+    def test_put_missing_required_field_returns_400(self):
+        self.client.force_authenticate(user=self.owner)
+        response = self.client.put(self.url(self.owner), {"slug": "owner-co"})
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("name", response.data)
+
+    def test_put_invalid_website_returns_400(self):
+        self.client.force_authenticate(user=self.owner)
+        response = self.client.put(
+            self.url(self.owner),
+            {
+                "name": "Owner Co",
+                "slug": "owner-co",
+                "website": "not-a-url",
+            },
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("website", response.data)
+
+    def test_put_unknown_tag_returns_400(self):
+        self.client.force_authenticate(user=self.owner)
+        response = self.client.put(
+            self.url(self.owner),
+            {
+                "name": "Owner Co",
+                "slug": "owner-co",
+                "tags": ["does-not-exist"],
+            },
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("tags", response.data)
+
+    def test_put_invalid_stats_returns_400(self):
+        self.client.force_authenticate(user=self.owner)
+        response = self.client.put(
+            self.url(self.owner),
+            {
+                "name": "Owner Co",
+                "slug": "owner-co",
+                "stats": {"team_size": "not-a-number"},
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("stats", response.data)
+
+    def test_put_full_replace_success(self):
+        self.client.force_authenticate(user=self.owner)
+        response = self.client.put(
+            self.url(self.owner),
+            {
+                "name": "New Name",
+                "slug": "owner-co",
+                "short_description": "Brand new",
+                "website": "https://new.example.com",
+                "stats": {"team_size": 5},
+            },
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_unauthenticated_patch_returns_401(self):
+        response = self.client.patch(
+            self.url(self.owner), {"short_description": "Hack"}
+        )
+        self.assertIn(
+            response.status_code,
+            (status.HTTP_401_UNAUTHORIZED, status.HTTP_403_FORBIDDEN),
+        )
+
+    def test_non_owner_patch_returns_403(self):
+        self.client.force_authenticate(user=self.other_user)
+        response = self.client.patch(
+            self.url(self.owner), {"short_description": "Hack"}
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

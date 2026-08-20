@@ -10,45 +10,83 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('investors', '0001_initial'),
-        ('startups', '0001_initial'),
+        ("investors", "0001_initial"),
+        ("startups", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='investorprofile',
-            name='user',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='investor_profile', to=settings.AUTH_USER_MODEL),
+            model_name="investorprofile",
+            name="user",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="investor_profile",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='savedstartup',
-            name='investor',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='saved_startups', to='investors.investorprofile'),
+            model_name="savedstartup",
+            name="investor",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="saved_startups",
+                to="investors.investorprofile",
+            ),
         ),
         migrations.AddField(
-            model_name='savedstartup',
-            name='startup',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='saved_by_investors', to='startups.startupprofile'),
+            model_name="savedstartup",
+            name="startup",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="saved_by_investors",
+                to="startups.startupprofile",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='investorprofile',
-            constraint=models.CheckConstraint(condition=models.Q(('min_investment__isnull', True), ('min_investment__gte', 0), _connector='OR'), name='investor_min_investment_nonnegative'),
+            model_name="investorprofile",
+            constraint=models.CheckConstraint(
+                condition=models.Q(
+                    ("min_investment__isnull", True),
+                    ("min_investment__gte", 0),
+                    _connector="OR",
+                ),
+                name="investor_min_investment_nonnegative",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='investorprofile',
-            constraint=models.CheckConstraint(condition=models.Q(('max_investment__isnull', True), ('max_investment__gte', 0), _connector='OR'), name='investor_max_investment_nonnegative'),
+            model_name="investorprofile",
+            constraint=models.CheckConstraint(
+                condition=models.Q(
+                    ("max_investment__isnull", True),
+                    ("max_investment__gte", 0),
+                    _connector="OR",
+                ),
+                name="investor_max_investment_nonnegative",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='investorprofile',
-            constraint=models.CheckConstraint(condition=models.Q(('min_investment__isnull', True), ('max_investment__isnull', True), ('max_investment__gte', models.F('min_investment')), _connector='OR'), name='investor_max_investment_gte_min'),
+            model_name="investorprofile",
+            constraint=models.CheckConstraint(
+                condition=models.Q(
+                    ("min_investment__isnull", True),
+                    ("max_investment__isnull", True),
+                    ("max_investment__gte", models.F("min_investment")),
+                    _connector="OR",
+                ),
+                name="investor_max_investment_gte_min",
+            ),
         ),
         migrations.AddIndex(
-            model_name='savedstartup',
-            index=models.Index(fields=['investor', '-added_at'], name='saved_investor_added_idx'),
+            model_name="savedstartup",
+            index=models.Index(
+                fields=["investor", "-added_at"], name="saved_investor_added_idx"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='savedstartup',
-            constraint=models.UniqueConstraint(fields=('investor', 'startup'), name='unique_saved_startup'),
+            model_name="savedstartup",
+            constraint=models.UniqueConstraint(
+                fields=("investor", "startup"), name="unique_saved_startup"
+            ),
         ),
     ]

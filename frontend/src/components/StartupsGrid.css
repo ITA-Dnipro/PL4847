@@ -1,0 +1,99 @@
+.startups-section {
+    padding-inline: 12px;
+    padding: var(--margin-top-bottom) var(--margin-left-right);
+}
+
+.startups-section__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.startups-section__title {
+    margin: 0;
+    font-family: 'Geologica', sans-serif;
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 120%;
+    letter-spacing: 0.01em;
+    color: #232424;
+}
+
+.startups-section__link {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.startups-section__link-frame {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 4px;
+    gap: 2px;
+}
+
+.startups-section__link-label {
+    font-family: 'Geologica', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 120%;
+    letter-spacing: 0.01em;
+    color: #000000;
+    white-space: nowrap;
+}
+
+.startups-section__link-underline {
+    align-self: stretch;
+    height: 1.3px;
+    background: transparent;
+    transition: background-color 0.2s;
+}
+
+.startups-section__link-icon {
+    line-height: 1;
+    color: #000000;
+}
+
+.startups-section__link:hover .startups-section__link-underline,
+.startups-section__link:focus-visible .startups-section__link-underline {
+    background: #000000;
+}
+
+.startups-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-top: 24px;
+}
+
+.startups-grid__error {
+    color: #b45309;
+    margin-bottom: 16px;
+}
+
+.startups-grid__pagination-error {
+    color: #b45309;
+    margin: 20px 0 0;
+    text-align: center;
+}
+
+.startups-grid__view-more {
+    display: block;
+    margin: 32px auto 0;
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-h);
+    font: inherit;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.startups-grid__view-more:hover {
+    border-color: var(--accent-border);
+}
