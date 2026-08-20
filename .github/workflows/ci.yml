@@ -202,20 +202,38 @@ jobs:
           npm run build 2>&1 | tee /tmp/build.log
           exit ${PIPESTATUS[0]}
 
+      - name: Install Playwright browsers
+        id: playwright_install
+        continue-on-error: true
+        run: |
+          npx playwright install --with-deps chromium firefox 2>&1 | tee /tmp/playwright-install.log
+          exit "${PIPESTATUS[0]}"
+
+      - name: Run Playwright E2E tests
+        id: playwright
+        continue-on-error: true
+        run: |
+          npx playwright test 2>&1 | tee /tmp/playwright.log
+          exit "${PIPESTATUS[0]}"
+
       - name: Report all frontend check results
         if: always()
         run: |
           declare -A results=(
             [eslint]="${{ steps.eslint.outcome }}"
             [build]="${{ steps.build.outcome }}"
+            [playwright_install]="${{ steps.playwright_install.outcome }}"
+            [playwright]="${{ steps.playwright.outcome }}"
           )
           declare -A logs=(
             [eslint]=/tmp/eslint.log
             [build]=/tmp/build.log
+            [playwright_install]=/tmp/playwright-install.log
+            [playwright]=/tmp/playwright.log
           )
           failed=0
           echo "== Frontend check summary =="
-          for name in eslint build; do
+            for name in eslint build playwright_install playwright; do
             outcome="${results[$name]}"
             if [ "$outcome" = "success" ]; then
               echo "Completed $name"
