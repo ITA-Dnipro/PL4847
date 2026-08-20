@@ -30,9 +30,16 @@ function Hero() {
           ctaText: data.hero.cta_text,
           ctaLink: "/register",
           images:
-            data.hero.hero_images?.length > 0
-              ? data.hero.hero_images
-              : mockHero.images,
+            Array.isArray(data.hero.hero_images) && data.hero.hero_images.length > 0
+            ? data.hero.hero_images.map((image, index) =>
+                typeof image === "string"
+                  ? {
+                      src: image,
+                      alt: `Hero image ${index + 1}`,
+                    }
+                  : image
+              )
+            : mockHero.images,
         })
       } catch {
         setHero(mockHero)
