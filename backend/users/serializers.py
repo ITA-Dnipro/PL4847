@@ -7,6 +7,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
+from django.utils.text import slugify
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -25,6 +26,55 @@ def _is_inactive_test():
     except Exception:
         pass
     return False
+
+
+class RegisterSerializer(serializers.Serializer):
+    company_name = serializers.CharField(required=True, max_length=255)
+    email = serializers.EmailField(required=True, max_length=150)
+    password = serializers.CharField(
+        required=True, write_only=True, style={"input_type": "password"}
+    )
+    password_confirm = serializers.CharField(
+        required=True, write_only=True, style={"input_type": "password"}
+    )
+    last_name = serializers.CharField(required=True, max_length=150)
+    first_name = serializers.CharField(required=True, max_length=150)
+    role = serializers.ChoiceField(
+        choices=[User.Role.STARTUP, User.Role.INVESTOR], required=True
+    )
+    short_pitch = serializers.CharField(required=False, allow_blank=True)
+    website = serializers.URLField(required=False, allow_blank=True, max_length=500)
+    contact_phone = serializers.RegexField(
+        regex=r"^\+380\d{9}$", required=False, allow_blank=True
+    )
+
+    def validate_company_name(self, value):
+        if not slugify(value):
+            raise serializers.ValidationError(
+                "Company name must contain at least one letter or digit"
+            )
+        return value
+
+    def validate(self, attrs):
+        password = attrs["password"]
+        password_confirm = attrs["password_confirm"]
+        if password != password_confirm:
+            raise serializers.ValidationError(
+                {"password_confirm": "Passwords do not match"}
+            )
+
+        temp_user = User(
+            email=attrs["email"],
+            first_name=attrs["first_name"],
+            last_name=attrs["last_name"],
+        )
+
+        try:
+            validate_password(password=password, user=temp_user)
+        except DjangoValidationError as e:
+            raise serializers.ValidationError({"password": list(e.messages)}) from e
+
+        return attrs
 
 
 class LoginSerializer(TokenObtainPairSerializer):
