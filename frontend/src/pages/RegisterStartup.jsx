@@ -211,7 +211,7 @@ function RegisterStartup() {
   return (
     <>
       <div className="register-startup">
-        <form className="register-startup__card" onSubmit={handleSubmit}>
+        <form className="register-startup__card" onSubmit={handleSubmit} noValidate>
           <h1 className="register-startup__title">Реєстрація стартапу</h1>
 
           <p className="register-startup__required-note">* Обов'язкові поля позначені зірочкою</p>

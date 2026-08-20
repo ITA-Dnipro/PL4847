@@ -1,0 +1,375 @@
+.register-investor {
+  display: flex;
+  justify-content: center;
+  padding: 48px 24px 80px;
+  box-sizing: border-box;
+  background: var(--fw-bg);
+  flex: 1;
+}
+
+.register-investor__card {
+  width: 100%;
+  max-width: 560px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 40px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  text-align: left;
+}
+
+.register-investor__title {
+  font-family: 'Geologica', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: -0.01em;
+  color: var(--fw-text);
+  margin: 0 0 4px;
+}
+
+.register-investor__required-note {
+  font-size: 12px;
+  color: var(--text);
+  margin: -12px 0 4px;
+}
+
+.register-investor__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.register-investor__field--checkbox {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.register-investor__field:has(.register-investor__error) .register-investor__input {
+  border-color: #C0392B;
+}
+
+.register-investor__label-row {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.register-investor__label {
+  font-family: 'Geologica', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: -0.01em;
+  color: var(--fw-text);
+}
+
+.register-investor__required-mark {
+  color: #C0392B;
+  font-size: 14px;
+}
+
+.register-investor__hint {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text);
+  margin: 0;
+}
+
+.register-investor__input {
+  font: inherit;
+  font-size: 15px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fw-text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.register-investor__input:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+textarea.register-investor__input {
+  resize: vertical;
+  min-height: 72px;
+}
+
+.register-investor__phone {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--bg);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.register-investor__phone:has(.register-investor__input--phone:focus-visible) {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+.register-investor__phone-prefix {
+  display: flex;
+  align-items: center;
+  padding: 10px 8px 10px 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--fw-text);
+  background: var(--code-bg);
+  border-right: 1px solid var(--border);
+}
+
+.register-investor__input--phone {
+  border: none;
+  border-radius: 0;
+  flex: 1;
+  min-width: 0;
+}
+
+.register-investor__input--phone:focus-visible {
+  outline: none;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.register-investor__radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.register-investor__radio-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--fw-text);
+  cursor: pointer;
+}
+
+.register-investor__radio {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+}
+
+.register-investor__tag-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.register-investor__tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--fw-text);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.register-investor__tag:has(.register-investor__tag-checkbox:checked) {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+}
+
+.register-investor__tag-checkbox {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--accent);
+}
+
+.register-investor__checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 140%;
+  color: var(--fw-text);
+  cursor: pointer;
+}
+
+.register-investor__checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+}
+
+.register-investor__error {
+  font-size: 13px;
+  font-weight: 500;
+  color: #C0392B;
+  margin: 0;
+}
+
+.register-investor__server-error {
+  font-size: 14px;
+  font-weight: 500;
+  color: #C0392B;
+  background: rgba(192, 57, 43, 0.08);
+  border: 1px solid rgba(192, 57, 43, 0.3);
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin: 0;
+}
+
+.register-investor__submit {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  background: var(--cta-btn-bg);
+  color: var(--cta-btn-text);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.15s ease;
+}
+
+.register-investor__submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.register-investor__submit:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.register-investor__submit:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.register-investor__login-hint {
+  font-family: 'Geologica', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: -0.01em;
+  color: var(--fw-text);
+  text-align: center;
+  margin: 0;
+}
+
+.register-investor__login-link {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.register-investor__login-link-label {
+  font-family: 'Geologica', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: -0.01em;
+  color: #000000;
+}
+
+.register-investor__login-link-underline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1.3px;
+  background: transparent;
+  transition: background-color 0.2s;
+}
+
+.register-investor__login-link:hover .register-investor__login-link-underline,
+.register-investor__login-link:focus-visible .register-investor__login-link-underline {
+  background: #000000;
+}
+
+.register-investor__card--confirmation {
+  max-width: 560px;
+  padding: 0;
+  gap: 0;
+}
+
+.register-investor__confirmation-header {
+  padding: 24px 32px;
+  border-bottom: 1px solid var(--border);
+}
+
+.register-investor__confirmation-header .register-investor__title {
+  margin: 0;
+}
+
+.register-investor__confirmation-body {
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-size: 15px;
+  color: var(--fw-text);
+}
+
+.register-investor__resend {
+  margin: 0;
+}
+
+.register-investor__resend-link {
+  font: inherit;
+  font-weight: 600;
+  color: var(--fw-text);
+  text-decoration: underline;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.register-investor__resend-link:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.register-investor__resend-message {
+  font-size: 13px;
+  color: var(--fw-text);
+  margin: 0;
+}
+
+.register-investor__confirmation-footer {
+  padding: 24px 32px;
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 640px) {
+  .register-investor {
+    padding: 24px 16px 56px;
+  }
+
+  .register-investor__card {
+    padding: 24px;
+  }
+
+  .register-investor__confirmation-header,
+  .register-investor__confirmation-body,
+  .register-investor__confirmation-footer {
+    padding: 20px;
+  }
+}
