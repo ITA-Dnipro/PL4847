@@ -25,10 +25,7 @@ class CustomUserAdmin(UserAdmin):
         "username",
         "email",
     )
-    readonly_fields = (
-        "created_at",
-        "updated_at",
-    )
+    readonly_fields = ("created_at", "updated_at", "terms_accepted_at", "consent_ip")
 
     fieldsets = UserAdmin.fieldsets + (
         (
@@ -53,6 +50,16 @@ class CustomUserAdmin(UserAdmin):
                     "website",
                     "tags",
                     "stats",
+                ),
+            },
+        ),
+        (
+            "Consent",
+            {
+                "fields": (
+                    "terms_accepted_at",
+                    "newsletter_opt_in",
+                    "consent_ip",
                 ),
             },
         ),

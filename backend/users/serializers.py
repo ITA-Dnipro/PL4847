@@ -47,6 +47,15 @@ class RegisterSerializer(serializers.Serializer):
     contact_phone = serializers.RegexField(
         regex=r"^\+380\d{9}$", required=False, allow_blank=True
     )
+    terms_accepted = serializers.BooleanField(required=True)
+    newsletter_opt_in = serializers.BooleanField(required=False, default=False)
+
+    def validate_terms_accepted(self, value):
+        if not value:
+            raise serializers.ValidationError(
+                "You must accept the terms and privacy policy."
+            )
+        return value
 
     def validate_company_name(self, value):
         if not slugify(value):

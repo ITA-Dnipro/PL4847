@@ -33,7 +33,7 @@ function fillValidForm() {
   fireEvent.change(screen.getByLabelText('Повторіть пароль'), { target: { value: 'StrongPass123' } })
   fireEvent.change(screen.getByLabelText("Ім'я"), { target: { value: 'Alice' } })
   fireEvent.change(screen.getByLabelText('Прізвище'), { target: { value: 'Smith' } })
-  fireEvent.click(screen.getByLabelText('Я погоджуюсь з умовами використання'))
+  fireEvent.click(screen.getByLabelText(/Я погоджуюсь з/))
 }
 
 describe('RegisterInvestor', () => {
@@ -52,7 +52,7 @@ describe('RegisterInvestor', () => {
     expect(screen.getByText('Fintech')).toBeInTheDocument()
     expect(screen.getByLabelText('Про себе')).toBeInTheDocument()
     expect(screen.getByLabelText('Веб-сайт')).toBeInTheDocument()
-    expect(screen.getByLabelText('Я погоджуюсь з умовами використання')).toBeInTheDocument()
+    expect(screen.getByLabelText(/Я погоджуюсь з/)).toBeInTheDocument()
   })
 
   it('renders a link to log in for people who already have an account', () => {

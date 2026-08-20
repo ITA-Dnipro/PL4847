@@ -45,6 +45,9 @@ class User(AbstractUser):
         blank=True,
     )
     stats = models.JSONField(default=dict, blank=True)
+    terms_accepted_at = models.DateTimeField(null=True, blank=True)
+    newsletter_opt_in = models.BooleanField(default=False)
+    consent_ip = models.GenericIPAddressField(null=True, blank=True)
 
     class Meta:
         constraints = [

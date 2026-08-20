@@ -32,7 +32,7 @@ function fillValidForm() {
   fireEvent.change(screen.getByLabelText("Ім'я"), { target: { value: 'Alice' } })
   fireEvent.change(screen.getByLabelText('Прізвище'), { target: { value: 'Smith' } })
   fireEvent.change(screen.getByLabelText('Назва компанії'), { target: { value: 'Handmade Co' } })
-  fireEvent.click(screen.getByLabelText('Я погоджуюсь з умовами використання'))
+  fireEvent.click(screen.getByLabelText(/Я погоджуюсь з/))
 }
 
 describe('RegisterStartup', () => {
@@ -45,7 +45,7 @@ describe('RegisterStartup', () => {
     expect(screen.getByLabelText('Електронна пошта')).toBeInTheDocument()
     expect(screen.getByLabelText('Пароль')).toBeInTheDocument()
     expect(screen.getByLabelText('Назва компанії')).toBeInTheDocument()
-    expect(screen.getByLabelText('Я погоджуюсь з умовами використання')).toBeInTheDocument()
+    expect(screen.getByLabelText(/Я погоджуюсь з/)).toBeInTheDocument()
   })
 
   it('renders a link to log in for people who already have an account', () => {
