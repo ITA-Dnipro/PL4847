@@ -52,9 +52,11 @@ class RegisterSerializer(serializers.Serializer):
 
     def validate_terms_accepted(self, value):
         if not value:
-            raise serializers.ValidationError("You must accept the terms and privacy policy.")
+            raise serializers.ValidationError(
+                "You must accept the terms and privacy policy."
+            )
         return value
-    
+
     def validate_company_name(self, value):
         if not slugify(value):
             raise serializers.ValidationError(
