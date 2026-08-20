@@ -6,6 +6,8 @@ import Register from "./pages/Register"
 import StartupView from "./pages/StartupView"
 import InvestorDashboard from "./pages/InvestorDashboard"
 import Inbox from "./pages/Inbox"
+import PasswordResetRequest from "./pages/PasswordResetRequest"
+import PasswordResetConfirm from "./pages/PasswordResetConfirm"
 
 
 function App() {
@@ -30,6 +32,8 @@ function App() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/forgot-password" element={<PasswordResetRequest />} />
+      <Route path="/reset-password/" element={<PasswordResetConfirm />} />
       <Route path="/register" element={<Register />} />
       <Route path="/startups/:id" element={<StartupView />} />
       <Route path="/dashboard" element={<InvestorDashboard />} />
