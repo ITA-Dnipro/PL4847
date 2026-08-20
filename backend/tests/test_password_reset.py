@@ -85,6 +85,18 @@ class TestPasswordReset:
         }
         assert len(mail.outbox) == 0
 
+    def test_request_reset_ignores_ambient_authentication(self, api_client):
+        response = api_client.post(
+            reverse("users:password-reset-request"),
+            {"email": "anonymous@example.com"},
+            HTTP_AUTHORIZATION="Bearer stale-client-credential",
+        )
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data == {
+            "detail": "If the email exists, you will receive reset instructions."
+        }
+
     def test_request_reset_throttles_by_email_across_ips(self, api_client):
         url = reverse("users:password-reset-request")
         responses = [

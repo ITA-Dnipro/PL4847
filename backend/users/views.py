@@ -127,6 +127,9 @@ class PasswordResetRequestView(APIView):
     """
 
     permission_classes = [AllowAny]
+    # Reset requests are public and must not be affected by ambient session or
+    # stale bearer credentials held by the browser.
+    authentication_classes = ()
     throttle_classes = [PasswordResetRequestThrottle, PasswordResetEmailThrottle]
 
     def post(self, request, *args, **kwargs):

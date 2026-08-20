@@ -227,3 +227,10 @@ __marimo__/
 # Claude md file
 
 CLAUDE.md
+
+# Local AI workflow instructions and issue exports
+AGENTS.md
+PROJECT_SPEC.md
+SKILLS.md
+TASKS.md
+issues4847.json
