@@ -9,10 +9,10 @@
 
 .register-startup__card {
   width: 100%;
-  max-width: 480px;
+  max-width: 560px;
   background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 6px;
   padding: 40px;
   box-sizing: border-box;
   display: flex;
@@ -190,6 +190,7 @@ textarea.register-startup__input {
 }
 
 .register-startup__submit {
+  display: inline-block;
   margin-top: 8px;
   padding: 12px 20px;
   border: none;
@@ -199,6 +200,8 @@ textarea.register-startup__input {
   font-size: 15px;
   font-weight: 600;
   letter-spacing: 0.01em;
+  text-align: center;
+  text-decoration: none;
   cursor: pointer;
   transition: opacity 0.2s ease, transform 0.15s ease;
 }
@@ -258,12 +261,59 @@ textarea.register-startup__input {
   background: #000000;
 }
 
-.register-startup__confirmation {
-  max-width: 480px;
-  margin: 48px auto;
-  text-align: center;
-  padding: 0 24px;
-  flex: 1;
+.register-startup__card--confirmation {
+  max-width: 560px;
+  padding: 0;
+  gap: 0;
+}
+
+.register-startup__confirmation-header {
+  padding: 24px 32px;
+  border-bottom: 1px solid var(--border);
+}
+
+.register-startup__confirmation-header .register-startup__title {
+  margin: 0;
+}
+
+.register-startup__confirmation-body {
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-size: 15px;
+  color: var(--fw-text);
+}
+
+.register-startup__resend {
+  margin: 0;
+}
+
+.register-startup__resend-link {
+  font: inherit;
+  font-weight: 600;
+  color: var(--fw-text);
+  text-decoration: underline;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.register-startup__resend-link:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.register-startup__resend-message {
+  font-size: 13px;
+  color: var(--fw-text);
+  margin: 0;
+}
+
+.register-startup__confirmation-footer {
+  padding: 24px 32px;
+  border-top: 1px solid var(--border);
 }
 
 @media (max-width: 640px) {
@@ -273,5 +323,11 @@ textarea.register-startup__input {
 
   .register-startup__card {
     padding: 24px;
+  }
+
+  .register-startup__confirmation-header,
+  .register-startup__confirmation-body,
+  .register-startup__confirmation-footer {
+    padding: 20px;
   }
 }

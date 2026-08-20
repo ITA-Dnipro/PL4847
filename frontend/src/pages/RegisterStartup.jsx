@@ -25,6 +25,8 @@ function RegisterStartup() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [serverError, setServerError] = useState("")
   const [submitted, setSubmitted] = useState(false)
+  const [resending, setResending] = useState(false)
+  const [resendMessage, setResendMessage] = useState("")
 
   function handleChange(e) {
     const { name, value, type, checked, files } = e.target
@@ -146,12 +148,60 @@ function RegisterStartup() {
     }
   }
 
+  async function handleResend() {
+    setResending(true)
+    setResendMessage("")
+
+    try {
+      await fetch("/api/auth/resend-verification/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email }),
+      })
+    } finally {
+      // The endpoint always responds the same way regardless of outcome
+      // (anti-enumeration by design), so there's nothing to branch on here.
+      setResendMessage("Лист надіслано ще раз.")
+      setResending(false)
+    }
+  }
+
   if (submitted) {
     return (
       <>
-        <div className="register-startup__confirmation" aria-live="polite">
-          <h1 className="register-startup__title">Перевірте свою пошту</h1>
-          <p>Ми надіслали посилання для підтвердження на {formData.email}. Перейдіть за ним, щоб завершити реєстрацію.</p>
+        <div className="register-startup">
+          <div className="register-startup__card register-startup__card--confirmation" aria-live="polite">
+            <div className="register-startup__confirmation-header">
+              <h1 className="register-startup__title">Реєстрація майже завершена</h1>
+            </div>
+
+            <div className="register-startup__confirmation-body">
+              <p>
+                На вашу електронну пошту {formData.email} відправлено листа. Будь ласка,
+                перейдіть за посиланням з листа для підтвердження вказаної електронної адреси.
+              </p>
+
+              <p className="register-startup__resend">
+                Не отримали листа?{" "}
+                <button
+                  type="button"
+                  className="register-startup__resend-link"
+                  onClick={handleResend}
+                  disabled={resending}
+                >
+                  Надіслати ще раз
+                </button>
+              </p>
+
+              {resendMessage && <p className="register-startup__resend-message">{resendMessage}</p>}
+            </div>
+
+            <div className="register-startup__confirmation-footer">
+              <Link to="/login" className="register-startup__submit">
+                Повернутися до входу
+              </Link>
+            </div>
+          </div>
         </div>
         <Footer />
       </>
