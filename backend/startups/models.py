@@ -4,6 +4,8 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 
+from .validators import phone_validator
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -64,6 +66,9 @@ class StartupProfile(models.Model):
     contact_email = models.EmailField(
         blank=True,
     )
+    contact_phone = models.CharField(
+        max_length=13, blank=True, validators=[phone_validator]
+    )
     logo_url = models.URLField(
         max_length=500,
         blank=True,
@@ -115,3 +120,28 @@ class StartupProfile(models.Model):
 
     def __str__(self) -> str:
         return self.company_name
+
+
+class Subscription(models.Model):
+    startup = models.ForeignKey(
+        "StartupProfile",
+        on_delete=models.CASCADE,
+        related_name="subscriptions",
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="startup_subscriptions",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["startup", "user"],
+                name="unique_subscription_per_user",
+            ),
+        ]
+
+    def __str__(self):
+        return f"{self.user} -> {self.startup}"

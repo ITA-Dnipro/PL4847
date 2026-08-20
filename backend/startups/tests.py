@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -21,7 +21,7 @@ def make_user(username, email):
 
 
 class StartupListAPITests(APITestCase):
-    url = reverse("startup-list")
+    url = reverse_lazy("startup-list")
 
     @classmethod
     def setUpTestData(cls):

@@ -1,0 +1,20 @@
+{
+  "title": "CRAFTMERGE",
+  "subtitle": "Об’єднуємо крафтових виробників та інноваторів",
+  "ctaText": "Долучитися",
+  "ctaLink": "/register",
+  "images": [
+    {
+      "src": "https://picsum.photos/id/1011/600/400",
+      "alt": "Крафтове виробництво"
+    },
+    {
+      "src": "https://picsum.photos/id/1015/600/400",
+      "alt": "Український крафтовий продукт"
+    },
+    {
+      "src": "https://picsum.photos/id/1025/600/400",
+      "alt": "Команда крафтових виробників"
+    }
+  ]
+}

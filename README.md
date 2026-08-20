@@ -148,3 +148,70 @@ The Codecov upload step uses `fail_ci_if_error: false`.
 If `CODECOV_TOKEN` is missing or incorrect, or if the Codecov upload fails,
 the error will be reported in the workflow logs, but it will not fail the
 entire CI pipeline.
+
+### Authentication API
+
+#### `POST /api/auth/login/`
+Authenticates user with email and password, returning short-lived access and refresh JWT tokens.
+
+- **Rate Limit:** 5 requests per minute (per IP)
+- **Request Body:**
+  ```json
+  {
+    "email": "user@example.com",
+    "password": "P@ssw0rd123",
+    "remember": true
+  }
+
+{
+  "access": "<jwt-access-token>",
+  "refresh": "<jwt-refresh-token>",
+  "user": {
+    "id": 1,
+    "email": "user@example.com",
+    "role": "startup"
+  }
+}
+
+Error Responses:
+
+400 Bad Request: Відсутні обов'язкові поля (email або password).
+
+401 Unauthorized: Невірні облікові дані ({"detail": "Invalid credentials"}).
+
+429 Too Many Requests: Перевищено ліміт спроб входу (більше 5 на хвилину).
+
+#### `POST /api/auth/register/`
+Registers a new startup or investor account. Creates the user as inactive, creates the matching profile (`StartupProfile` or `InvestorProfile`), and sends a verification email.
+
+- **Request Body:**
+  ```json
+  {
+    "email": "alice@example.com",
+    "password": "P@ssw0rd123",
+    "password_confirm": "P@ssw0rd123",
+    "role": "startup",
+    "company_name": "Handmade Co",
+    "first_name": "Alice",
+    "last_name": "Smith",
+    "short_pitch": "Woodwork & ceramics",
+    "website": "https://example.com",
+    "contact_phone": "+380501234567"
+  }
+  ```
+  `role` is one of `startup` or `investor`. `short_pitch`, `website`, and `contact_phone` are optional; every other field is required.
+
+- **Response 201:**
+  ```json
+  {
+    "id": "fb980645-7169-4fb8-b2c9-0ccb0a84cf10",
+    "email": "alice@example.com",
+    "detail": "Verification email sent."
+  }
+  ```
+
+- **Error Responses:**
+  - `400 Bad Request`: field-level validation errors — missing required fields, `password`/`password_confirm` mismatch, password too weak (minimum length, common-password, and similarity-to-name/email checks), invalid `role`, or `contact_phone` not matching `+380XXXXXXXXX`.
+  - `409 Conflict`: `{"detail": "A user with this email already exists"}` — the email is already registered.
+
+  **Note on the `409`:** unlike `/api/auth/password-reset/`, which always returns `200` regardless of whether the email exists (an anti-enumeration measure), registration deliberately returns `409` for a duplicate email. Silently succeeding would leave a returning user waiting on a verification email that never arrives, with no indication they should log in instead — for this endpoint specifically, that UX cost was judged to outweigh the enumeration risk.
