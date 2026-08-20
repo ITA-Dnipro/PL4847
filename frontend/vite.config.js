@@ -7,6 +7,7 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: './src/setupTests.js',
     globals: true,
+    include: ['src/**/*.{test,spec}.{js,jsx,ts,tsx}'],
   },
   server: {
     proxy: {

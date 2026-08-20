@@ -1,0 +1,11 @@
+.landing-page {
+  --text: #6b6375;
+  --text-h: #08060d;
+  --bg: #ffffff;
+  --fw-bg: #f9f5ec;
+  --fw-text: #232424;
+
+  background: #ffffff;
+  color: #232424;
+  color-scheme: light;
+}
