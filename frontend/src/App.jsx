@@ -7,6 +7,8 @@ import Home from "./pages/Home"
 import Search from "./pages/Search"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
+import RegisterStartup from "./pages/RegisterStartup"
+import RegisterInvestor from "./pages/RegisterInvestor"
 import StartupView from "./pages/StartupView"
 import InvestorDashboard from "./pages/InvestorDashboard"
 import Inbox from "./pages/Inbox"
@@ -21,6 +23,8 @@ function App() {
         <Route path="/search" element={<Search />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/register/startup" element={<RegisterStartup />} />
+        <Route path="/register/investor" element={<RegisterInvestor />} />
         <Route path="/startups/:id" element={<StartupView />} />
         <Route path="/dashboard" element={<InvestorDashboard />} />
         <Route path="/messages" element={<Inbox />} />

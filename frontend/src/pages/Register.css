@@ -1,0 +1,103 @@
+.register-picker {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  padding: var(--margin-top-bottom) var(--margin-left-right);
+  gap: 24px;
+  background: var(--fw-bg);
+}
+
+.register-picker__heading {
+  font-family: 'Geologica', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--fw-text);
+  margin: 0;
+}
+
+.register-picker__cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 360px;
+}
+
+.register-picker__card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 102px;
+  border-radius: 6px;
+  padding: 18px;
+  background: var(--cta-btn-text);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.register-picker__card:hover,
+.register-picker__card:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(35, 36, 36, 0.12);
+  background: #fffaf3;
+}
+
+.register-picker__card-title {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 140%;
+  letter-spacing: 0.01em;
+  color: var(--fw-text);
+  text-align: center;
+}
+
+.register-picker__login-hint {
+  font-family: 'Geologica', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: -0.01em;
+  color: var(--fw-text);
+  text-align: center;
+  margin: 0;
+}
+
+.register-picker__login-link {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.register-picker__login-link-label {
+  font-family: 'Geologica', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: -0.01em;
+  color: #000000;
+}
+
+.register-picker__login-link-underline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1.3px;
+  background: transparent;
+  transition: background-color 0.2s;
+}
+
+.register-picker__login-link:hover .register-picker__login-link-underline,
+.register-picker__login-link:focus-visible .register-picker__login-link-underline {
+  background: #000000;
+}
+
+@media (max-width: 640px) {
+  .register-picker {
+    padding: 32px 20px;
+  }
+}

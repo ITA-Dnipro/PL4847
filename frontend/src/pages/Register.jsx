@@ -1,5 +1,34 @@
+import { Link } from "react-router-dom"
+import Footer from "../components/Footer"
+import "./Register.css"
+
 function Register() {
-  return <h1>Register Page</h1>
+  return (
+    <>
+      <div className="register-picker">
+        <h1 className="register-picker__heading">Оберіть тип реєстрації</h1>
+
+        <div className="register-picker__cards">
+          <Link className="register-picker__card" to="/register/startup">
+            <span className="register-picker__card-title">Зареєструватися як стартап</span>
+          </Link>
+
+          <Link className="register-picker__card" to="/register/investor">
+            <span className="register-picker__card-title">Зареєструватися як інвестор</span>
+          </Link>
+        </div>
+
+        <p className="register-picker__login-hint">
+          Ви вже зареєстровані?{" "}
+          <Link to="/login" className="register-picker__login-link">
+            <span className="register-picker__login-link-label">Увійти</span>
+            <span className="register-picker__login-link-underline" />
+          </Link>
+        </p>
+      </div>
+      <Footer />
+    </>
+  )
 }
 
 export default Register;
