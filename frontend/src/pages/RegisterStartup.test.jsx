@@ -118,8 +118,9 @@ describe('RegisterStartup', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Зареєструватися' }))
 
     await waitFor(() => {
-      expect(screen.getByText(/перевірте свою пошту/i)).toBeInTheDocument()
-    })
+        expect(screen.getByText(/відправлено листа/i)).toBeInTheDocument()
+      })
+
 
     const calls = registerCalls()
     expect(calls).toHaveLength(1)
