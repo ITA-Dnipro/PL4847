@@ -1,15 +1,18 @@
-import logging
-
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
-from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from rest_framework import serializers
 
+from .password_reset import (
+    PasswordResetLifecycleError,
+    complete_password_reset,
+    record_password_reset_event,
+    request_metadata,
+)
+
 User = get_user_model()
-logger = logging.getLogger(__name__)
 
 
 class PasswordResetRequestSerializer(serializers.Serializer):
@@ -29,8 +32,9 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 
     def validate(self, data):
         uidb64 = data.get("uid")
-        raw_token = data.get("token")
         password = data.get("password")
+        request = self.context.get("request")
+        metadata = request_metadata(request) if request is not None else {}
 
         try:
             uid = force_str(urlsafe_base64_decode(uidb64))
@@ -40,12 +44,15 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
                 {"detail": "Invalid or expired token."}
             ) from None
 
-        if not default_token_generator.check_token(user, raw_token):
-            raise serializers.ValidationError({"detail": "Invalid or expired token."})
-
         try:
             validate_password(password, user=user)
         except DjangoValidationError as e:
+            record_password_reset_event(
+                user,
+                "failed",
+                "failure",
+                metadata,
+            )
             raise serializers.ValidationError({"password": list(e.messages)})
 
         data["user"] = user
@@ -54,9 +61,15 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
     def save(self, **kwargs):
         user = self.validated_data["user"]
         password = self.validated_data["password"]
+        request = self.context.get("request")
+        metadata = request_metadata(request) if request is not None else {}
 
-        user.set_password(password)
-        user.save()
-
-        logger.info("AUDIT: Password successfully reset for user ID: %s", user.pk)
-        return user
+        try:
+            return complete_password_reset(
+                user,
+                self.validated_data["token"],
+                password,
+                metadata,
+            )
+        except PasswordResetLifecycleError as error:
+            raise serializers.ValidationError({"detail": str(error)}) from None

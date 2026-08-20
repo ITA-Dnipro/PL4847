@@ -1,4 +1,5 @@
 import base64
+import hashlib
 import logging
 
 from django.conf import settings
@@ -8,13 +9,14 @@ from django.core.mail import EmailMultiAlternatives, send_mail
 from django.template.exceptions import TemplateDoesNotExist
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
-from rest_framework import status
+from rest_framework import serializers, status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.throttling import AnonRateThrottle
+from rest_framework.throttling import AnonRateThrottle, SimpleRateThrottle
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from .password_reset import issue_reset_token, request_metadata
 from .serializers import PasswordResetConfirmSerializer, PasswordResetRequestSerializer
 
 logger = logging.getLogger(__name__)
@@ -27,6 +29,20 @@ class PasswordResetThrottle(AnonRateThrottle):
 
 class PasswordResetRequestThrottle(AnonRateThrottle):
     rate = "5/min"
+
+
+class PasswordResetEmailThrottle(SimpleRateThrottle):
+    """Limit reset mail volume per normalized email without revealing state."""
+
+    scope = "password_reset_email"
+    rate = "5/hour"
+
+    def get_cache_key(self, request, view):
+        email = str(request.data.get("email", "")).strip().lower()
+        if not email:
+            return None
+        digest = hashlib.sha256(email.encode("utf-8")).hexdigest()
+        return self.cache_format % {"scope": self.scope, "ident": digest}
 
 
 class PasswordResetConfirmThrottle(AnonRateThrottle):
@@ -66,7 +82,7 @@ class PasswordResetRequestView(APIView):
     """
 
     permission_classes = [AllowAny]
-    throttle_classes = [PasswordResetRequestThrottle]
+    throttle_classes = [PasswordResetRequestThrottle, PasswordResetEmailThrottle]
 
     def post(self, request, *args, **kwargs):
         serializer = PasswordResetRequestSerializer(data=request.data)
@@ -83,13 +99,25 @@ class PasswordResetRequestView(APIView):
                         .rstrip("=")
                     )
                     token = default_token_generator.make_token(user)
+                    issue_reset_token(user, token, request_metadata(request))
 
                     frontend_url = getattr(
                         settings, "FRONTEND_URL", "http://localhost:3000"
                     )
-                    reset_url = f"{frontend_url}/reset-password/?uid={uidb64}&token={token}"
+                    reset_url = (
+                        f"{frontend_url}/reset-password/?uid={uidb64}&token={token}"
+                    )
 
-                    context = {"user": user, "reset_url": reset_url}
+                    context = {
+                        "user": user,
+                        "user_name": user.get_full_name() or user.username,
+                        "reset_link": reset_url,
+                        "reset_url": reset_url,
+                        "expiry_minutes": getattr(
+                            settings, "PASSWORD_RESET_TIMEOUT", 3600
+                        )
+                        // 60,
+                    }
                     subject = "Скидання пароля"
                     from_email = getattr(
                         settings, "DEFAULT_FROM_EMAIL", "noreply@example.com"
@@ -104,7 +132,15 @@ class PasswordResetRequestView(APIView):
                         )
 
                         msg = EmailMultiAlternatives(
-                            subject, text_content, from_email, [user.email]
+                            subject,
+                            text_content,
+                            from_email,
+                            [user.email],
+                            headers=(
+                                {"Reply-To": getattr(settings, "DEFAULT_REPLY_TO", "")}
+                                if getattr(settings, "DEFAULT_REPLY_TO", "")
+                                else None
+                            ),
                         )
                         msg.attach_alternative(html_content, "text/html")
                         msg.send()
@@ -148,9 +184,20 @@ class PasswordResetConfirmView(APIView):
     throttle_classes = [PasswordResetConfirmThrottle]
 
     def post(self, request, *args, **kwargs):
-        serializer = PasswordResetConfirmSerializer(data=request.data)
+        serializer = PasswordResetConfirmSerializer(
+            data=request.data,
+            context={"request": request},
+        )
         if serializer.is_valid():
-            user = serializer.save()
+            try:
+                user = serializer.save()
+            except serializers.ValidationError as error:
+                errors = error.detail
+                if isinstance(errors, dict) and "detail" in errors:
+                    detail = errors["detail"]
+                    if isinstance(detail, (list, tuple)):
+                        errors = {"detail": detail[0]}
+                return Response(errors, status=status.HTTP_400_BAD_REQUEST)
             logger.info(
                 "AUDIT: Password reset successfully completed for user ID: %s",
                 user.pk,
