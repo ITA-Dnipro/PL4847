@@ -1,0 +1,68 @@
+const mockStartups = [
+  {
+    id: 1,
+    company_name: "Handmade Co",
+    short_description: "Woodwork and ceramics",
+    thumbnail_url: "https://placehold.co/400x240?text=Handmade+Co",
+    location: "Chernivtsi",
+    tags: ["craft", "pottery"],
+  },
+  {
+    id: 2,
+    company_name: "REGNO",
+    short_description: "Natural food and local products",
+    thumbnail_url: "https://placehold.co/400x240?text=REGNO",
+    location: "Kyiv region",
+    tags: ["food", "local"],
+  },
+  {
+    id: 3,
+    company_name: "MYKKO",
+    short_description: "Eco-friendly home goods",
+    thumbnail_url: "https://placehold.co/400x240?text=MYKKO",
+    location: "Zakarpattia region",
+    tags: ["eco", "home"],
+  },
+  {
+    id: 4,
+    company_name: "MHP",
+    short_description: "Agricultural and food solutions",
+    thumbnail_url: "https://placehold.co/400x240?text=MHP",
+    location: "Kyiv",
+    tags: ["agro", "food"],
+  },
+  {
+    id: 5,
+    company_name: "Craft Nest",
+    short_description: "Decor and handmade gifts",
+    thumbnail_url: "https://placehold.co/400x240?text=Craft+Nest",
+    location: "Lviv",
+    tags: ["craft", "decor"],
+  },
+  {
+    id: 6,
+    company_name: "Green Clay",
+    short_description: "Ceramics studio and workshops",
+    thumbnail_url: "https://placehold.co/400x240?text=Green+Clay",
+    location: "Ivano-Frankivsk",
+    tags: ["ceramics", "workshops"],
+  },
+  {
+    id: 7,
+    company_name: "Honey Drop",
+    short_description: "Bee products and sweets",
+    thumbnail_url: "https://placehold.co/400x240?text=Honey+Drop",
+    location: "Poltava",
+    tags: ["honey", "craft"],
+  },
+  {
+    id: 8,
+    company_name: "Urban Loom",
+    short_description: "Textile design and accessories",
+    thumbnail_url: "https://placehold.co/400x240?text=Urban+Loom",
+    location: "Kharkiv",
+    tags: ["textile", "design"],
+  },
+];
+
+export default mockStartups;
