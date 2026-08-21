@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom"
 import "./App.css"
 import Header from "./components/Header/Header"
 import InfoPage from "./components/InfoPage"
+import ProtectedRoute from "./components/ProtectedRoute"
 import Home from "./pages/Home"
 import Search from "./pages/Search"
 import Login from "./pages/Login"
@@ -30,8 +31,25 @@ function App() {
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/startups/:id" element={<StartupView />} />
-        <Route path="/dashboard" element={<InvestorDashboard />} />
-        <Route path="/messages" element={<Inbox />} />
+
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <InvestorDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/messages"
+          element={
+            <ProtectedRoute>
+              <Inbox />
+            </ProtectedRoute>
+          }
+        />
+
         <Route path="/manufacturers" element={<InfoPage />} />
         <Route path="/importers" element={<InfoPage />} />
         <Route path="/retail-chains" element={<InfoPage />} />
