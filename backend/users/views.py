@@ -1,4 +1,5 @@
 import base64
+import hashlib
 import inspect
 import logging
 
@@ -15,10 +16,10 @@ from django.utils import timezone
 from django.utils.encoding import force_bytes
 from django.utils.text import slugify
 from investors.models import InvestorProfile
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions, serializers, status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.throttling import AnonRateThrottle
+from rest_framework.throttling import AnonRateThrottle, SimpleRateThrottle
 from rest_framework.views import APIView
 from rest_framework_simplejwt.token_blacklist.models import (
     BlacklistedToken,
@@ -28,6 +29,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 from startups.models import StartupProfile
 
+from .password_reset import issue_reset_token, request_metadata
 from .serializers import (
     LoginSerializer,
     PasswordResetConfirmSerializer,
@@ -73,6 +75,20 @@ class PasswordResetRequestThrottle(AnonRateThrottle):
     rate = "5/min"
 
 
+class PasswordResetEmailThrottle(SimpleRateThrottle):
+    """Limit reset mail volume per normalized email without revealing state."""
+
+    scope = "password_reset_email"
+    rate = "5/hour"
+
+    def get_cache_key(self, request, view):
+        email = str(request.data.get("email", "")).strip().lower()
+        if not email:
+            return None
+        digest = hashlib.sha256(email.encode("utf-8")).hexdigest()
+        return self.cache_format % {"scope": self.scope, "ident": digest}
+
+
 class PasswordResetConfirmThrottle(AnonRateThrottle):
     scope = "password_reset_confirm"
     rate = "5/min"
@@ -106,8 +122,16 @@ class LogoutView(APIView):
 
 
 class PasswordResetRequestView(APIView):
-    permission_classes = (AllowAny,)
-    throttle_classes = [PasswordResetRequestThrottle]
+    """
+    POST /api/auth/password-reset/
+    Endpoint to request a password reset email.
+    """
+
+    permission_classes = [AllowAny]
+    # Reset requests are public and must not be affected by ambient session or
+    # stale bearer credentials held by the browser.
+    authentication_classes = ()
+    throttle_classes = [PasswordResetRequestThrottle, PasswordResetEmailThrottle]
 
     def post(self, request, *args, **kwargs):
         serializer = PasswordResetRequestSerializer(data=request.data)
@@ -123,12 +147,25 @@ class PasswordResetRequestView(APIView):
                         .rstrip("=")
                     )
                     token = default_token_generator.make_token(user)
-                    frontend_url = getattr(
-                        settings, "FRONTEND_URL", "http://localhost:5173"
-                    )
-                    reset_url = f"{frontend_url}/password-reset/confirm?uid={uidb64}&token={token}"
+                    issue_reset_token(user, token, request_metadata(request))
 
-                    context = {"user": user, "reset_url": reset_url}
+                    frontend_url = getattr(
+                        settings, "FRONTEND_URL", "http://localhost:3000"
+                    )
+                    reset_url = (
+                        f"{frontend_url}/reset-password/?uid={uidb64}&token={token}"
+                    )
+
+                    context = {
+                        "user": user,
+                        "user_name": user.get_full_name() or user.username,
+                        "reset_link": reset_url,
+                        "reset_url": reset_url,
+                        "expiry_minutes": getattr(
+                            settings, "PASSWORD_RESET_TIMEOUT", 3600
+                        )
+                        // 60,
+                    }
                     subject = "Скидання пароля"
                     from_email = getattr(
                         settings, "DEFAULT_FROM_EMAIL", "noreply@example.com"
@@ -142,7 +179,15 @@ class PasswordResetRequestView(APIView):
                             "emails/password_reset_email.html", context
                         )
                         msg = EmailMultiAlternatives(
-                            subject, text_content, from_email, [user.email]
+                            subject,
+                            text_content,
+                            from_email,
+                            [user.email],
+                            headers=(
+                                {"Reply-To": getattr(settings, "DEFAULT_REPLY_TO", "")}
+                                if getattr(settings, "DEFAULT_REPLY_TO", "")
+                                else None
+                            ),
                         )
                         msg.attach_alternative(html_content, "text/html")
                         msg.send()
@@ -157,9 +202,7 @@ class PasswordResetRequestView(APIView):
                     pass
 
             return Response(
-                {
-                    "message": "If an account with that email exists, password reset instructions have been sent."
-                },
+                {"detail": "If the email exists, you will receive reset instructions."},
                 status=status.HTTP_200_OK,
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -169,43 +212,37 @@ class PasswordResetConfirmView(APIView):
     permission_classes = (AllowAny,)
     throttle_classes = [PasswordResetConfirmThrottle]
 
-    def post(self, request):
-        serializer = PasswordResetConfirmSerializer(data=request.data)
-        if not serializer.is_valid():
-            errors = serializer.errors
-            if "password" in errors:
-                return Response(
-                    {"password": errors["password"]},
-                    status=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                )
+    def post(self, request, *args, **kwargs):
+        serializer = PasswordResetConfirmSerializer(
+            data=request.data,
+            context={"request": request},
+        )
+        if serializer.is_valid():
+            try:
+                user = serializer.save()
+            except serializers.ValidationError as error:
+                errors = error.detail
+                if isinstance(errors, dict) and "detail" in errors:
+                    detail = errors["detail"]
+                    if isinstance(detail, (list, tuple)):
+                        errors = {"detail": detail[0]}
+                return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+            logger.info(
+                "AUDIT: Password reset successfully completed for user ID: %s",
+                user.pk,
+            )
             return Response(
-                {"detail": "Invalid or expired token."},
+                {"detail": "Password changed successfully."},
+                status=status.HTTP_200_OK,
+            )
+
+        if "detail" in serializer.errors:
+            return Response(
+                {"detail": serializer.errors["detail"][0]},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        user = serializer.validated_data["user"]
-        password = serializer.validated_data["password"]
-
-        with transaction.atomic():
-            user.set_password(password)
-            user.save()
-
-            for outstanding_token in OutstandingToken.objects.filter(user=user):
-                BlacklistedToken.objects.get_or_create(token=outstanding_token)
-
-        user_ip_address = request.META.get("REMOTE_ADDR")
-        user_agent = request.META.get("HTTP_USER_AGENT")
-
-        logger.info(
-            "AUDIT: Password reset successfully completed for user ID: %s, IP: %s, UA: %s",
-            user.pk,
-            user_ip_address,
-            user_agent,
-        )
-        return Response(
-            {"detail": "Password changed successfully."},
-            status=status.HTTP_200_OK,
-        )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ProfileDetailView(generics.RetrieveUpdateAPIView):

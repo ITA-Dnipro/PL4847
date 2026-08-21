@@ -60,7 +60,7 @@ function StartupCard({ startup }) {
             if (response.status === 401 || response.status === 403) {
                 showToast("error", "Будь ласка, увійдіть у систему для підписки.");
                 // Припускаємо, що у вас є роутинг на /login або функція переходу
-                window.location.href = "/login"; 
+                window.location.href = "/login";
                 return;
             }
 

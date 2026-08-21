@@ -14,16 +14,19 @@ import StartupView from "./pages/StartupView"
 import Terms from "./pages/Terms"
 import InvestorDashboard from "./pages/InvestorDashboard"
 import Inbox from "./pages/Inbox"
+import PasswordResetRequest from "./pages/PasswordResetRequest"
+import PasswordResetConfirm from "./pages/PasswordResetConfirm"
 
 function App() {
   return (
     <>
       <Header />
-
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/search" element={<Search />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<PasswordResetRequest />} />
+        <Route path="/reset-password/" element={<PasswordResetConfirm />} />
         <Route path="/register" element={<Register />} />
         <Route path="/register/startup" element={<RegisterStartup />} />
         <Route path="/register/investor" element={<RegisterInvestor />} />
